@@ -1,0 +1,152 @@
+
+# 1st wave
+# Crossplane providers deploy
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: crossplane-providers
+  namespace: flux-system
+  labels:
+    toolkit.fluxcd.io/tenant: crossplane  
+spec:
+  interval: 10m0s
+  path: ./clusters/control-cluster/crossplane/providers
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+---
+# 1st wave
+# Crossplane Env configurations deploy
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: crossplane-env-configs
+  namespace: flux-system
+  labels:
+    toolkit.fluxcd.io/tenant: crossplane  
+spec:
+  interval: 10m0s
+  path: ./clusters/control-cluster/crossplane/envConfigs
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+---
+# 1st wave
+# Crossplane provider configurations deploy
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: crossplane-provider-configs
+  namespace: flux-system
+  labels:
+    toolkit.fluxcd.io/tenant: crossplane  
+spec:
+  interval: 10m0s
+  path: ./clusters/control-cluster/rossplane/providerConfig
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+---
+# 2nd wave
+# Crossplane resources deploy
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: crossplane-resources
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  dependsOn:
+    - name: crossplane-provider-configs
+  path: ./clusters/control-cluster/crossplane/resources
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+---
+# 2nd wave
+# Crossplane composition deploy
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: crossplane-composite-compositions
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  dependsOn:
+    - name: crossplane-env-configs
+  path: ./clusters/control-cluster/crossplane/composites/compositions
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+---
+# 1st wave
+# Crossplane XRD deploy
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: crossplane-composite-definitions
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  path: ./clusters/control-cluster/crossplane/composites/definitions
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+---
+# 2nd wave
+# Crossplane claim deploy
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: crossplane-composite-claims
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  dependsOn:
+    - name: crossplane-composite-definitions
+  path: ./clusters/control-cluster/crossplane/composites/claims
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+---
+# 3rd wave
+# Crossplane online-env 
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: crossplane-composite-claim-online
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  dependsOn:
+    - name: crossplane-composite-claims
+  path: ./clusters/control-cluster/crossplane/composites/claims/online
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+---
+# 3rd wave
+# Crossplane flux deploy
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: crossplane-composite-claim-flux
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  dependsOn:
+    - name: crossplane-composite-claim-online
+  path: ./clusters/control-cluster/crossplane/composites/claims/flux
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+---

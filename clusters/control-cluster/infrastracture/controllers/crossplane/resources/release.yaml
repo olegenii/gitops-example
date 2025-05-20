@@ -1,0 +1,19 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: crossplane
+  namespace: crossplane-system
+  labels:
+    toolkit.fluxcd.io/tenant: control-plane
+spec:
+  chart:
+    spec:
+      chart: crossplane
+      version: "1.x"
+      sourceRef:
+        kind: HelmRepository
+        name: crossplane-stable
+  interval: 1h0m0s
+  valuesFrom:
+    - kind: ConfigMap
+      name: crossplane-values-cm

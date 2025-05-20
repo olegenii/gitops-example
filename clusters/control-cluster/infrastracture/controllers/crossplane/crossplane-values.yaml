@@ -1,0 +1,15 @@
+args: 
+  - "--enable-environment-configs"
+# metrics:
+#   enabled: true
+# resourcesCrossplane:
+#   limits:
+#     # -- CPU resource limits for the Crossplane pod.
+#     cpu: 750m
+#     # -- Memory resource limits for the Crossplane pod.
+#     memory: 2048Mi
+#   requests:
+#     # -- CPU resource requests for the Crossplane pod.
+#     cpu: 300m
+#     # -- Memory resource requests for the Crossplane pod.
+#     memory: 1024Mi
