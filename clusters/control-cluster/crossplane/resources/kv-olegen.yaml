@@ -1,0 +1,11 @@
+apiVersion: keyvault.azure.upbound.io/v1beta1
+kind: Vault
+metadata:
+  name: kv-olegen
+spec:
+  forProvider:
+    resourceGroupName: rg_learn
+  managementPolicies: 
+    - "Observe"
+  providerConfigRef:
+    name: olegen-lab

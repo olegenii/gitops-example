@@ -1,0 +1,10 @@
+apiVersion: apiextensions.crossplane.io/v1alpha1
+kind: EnvironmentConfig
+metadata:
+  name: d1
+  labels: 
+    env: d1
+    issued-by: predefined
+data:
+  tags:
+    env: d1

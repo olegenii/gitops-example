@@ -1,0 +1,13 @@
+apiVersion: apiextensions.crossplane.io/v1alpha1
+kind: EnvironmentConfig
+metadata:
+  name: base
+  labels: 
+    env: base
+data:
+  # redefine on env layer
+  providerConfig: dcp-np
+  location: North Europe
+  tags:
+    provisioner: crossplane
+    org: olegen-lab
