@@ -1,0 +1,21 @@
+apiVersion: external-secrets.io/v1alpha1
+kind: ClusterSecretStore
+metadata:
+  name: kv-olegen
+spec:
+  provider:
+    # provider type: azure keyvault
+    azurekv:
+      # azure tenant ID, see: https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/active-directory-how-to-find-tenant
+      tenantId: "bd60af36-5e42-4c11-ab8a-55400b1491fe"
+      # URL of your vault instance, see: https://docs.microsoft.com/en-us/azure/key-vault/general/about-keys-secrets-certificates
+      vaultUrl: "https://kv-olegen.vault.azure.net"
+      authSecretRef:
+        # points to the secret that contains
+        # the azure service principal credentials
+        clientId:
+          name: azure-olegen-lab
+          key: ClientID
+        clientSecret:
+          name: azure-olegen-lab
+          key: ClientSecret
