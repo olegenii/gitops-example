@@ -3,5 +3,6 @@ kind: Kustomization
 resources:
   - azure-management.yaml
   - azure-containerservice.yaml
+  - azure-keyvault.yaml
   - kubernetes.yaml
   - helm.yaml
