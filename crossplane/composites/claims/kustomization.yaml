@@ -4,3 +4,4 @@ resources:
   - rg-claim.yaml
   - d1-net.yaml
   - d1-subnets.yaml
+  - d1-blue-aks-claim.yaml
