@@ -274,11 +274,11 @@ spec:
       - type: CombineFromComposite
         combine:
           variables:
-            - fromFieldPath: "status.azure.subscriptionId"
+            # - fromFieldPath: "status.azure.subscriptionId"
             - fromFieldPath: "spec.name"
           strategy: string
           string:
-            fmt: "/subscriptions/%s/resourceGroups/%s-nodepool"
+            fmt: "/subscriptions/1627ebbb-525b-4eea-8684-52d7545cfef9/resourceGroups/%s-nodepool"
         toFieldPath: "spec.forProvider.scope"
       # grab managedIdentityId
       - type: FromCompositeFieldPath
@@ -304,11 +304,11 @@ spec:
       - type: CombineFromComposite
         combine:
           variables:
-            - fromFieldPath: "status.azure.subscriptionId"
+            # - fromFieldPath: "status.azure.subscriptionId"
             - fromFieldPath: "spec.rgName"
           strategy: string
           string:
-            fmt: "/subscriptions/%s/resourceGroups/%s"
+            fmt: "/subscriptions/1627ebbb-525b-4eea-8684-52d7545cfef9/resourceGroups/%s"
         toFieldPath: "spec.forProvider.scope"
       # grab managedIdentityId
       - type: FromCompositeFieldPath
