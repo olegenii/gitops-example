@@ -1,0 +1,486 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: aks-composite
+spec:
+  compositeTypeRef:
+    apiVersion: azure.infra.dcp.sap/v1alpha1
+    kind: XCluster
+  resources:
+    - name: cluster
+      base:
+        apiVersion: containerservice.azure.upbound.io/v1beta2
+        kind: KubernetesCluster
+        spec:
+          forProvider:
+            automaticChannelUpgrade: ''
+            azureActiveDirectoryRoleBasedAccessControl:
+              azureRbacEnabled: false
+              # clientAppId: b91c533c-1e35-4683-afb7-1f9538d67232
+              managed: true
+              # serverAppId: ''
+              # tenantId: 42f7676c-f455-423c-82f6-dc2d99791af7
+            defaultNodePool:
+              name: pool
+              upgradeSettings:
+                drainTimeoutInMinutes: 30
+                maxSurge: 10%
+                nodeSoakDurationInMinutes: 1
+              zones:
+                - "1"
+                - "2"
+                - "3"                
+            enablePodSecurityPolicy: false
+            identity:
+              type: SystemAssigned
+            maintenanceWindowNodeOs:
+              dayOfMonth: 0
+              dayOfWeek: Sunday
+              duration: 4
+              frequency: Weekly
+              interval: 1
+              startDate: '2025-01-28T00:00:00Z'
+              startTime: '00:00'
+              utcOffset: '+02:00'
+              weekIndex: ''
+            networkProfile:
+              dnsServiceIp: 10.1.0.10
+              ipVersions:
+                - IPv4
+              loadBalancerProfile:
+                idleTimeoutInMinutes: 5
+                managedOutboundIpCount: 0
+                managedOutboundIpv6Count: 0
+                outboundIpAddressIds:
+                  - ""
+                  # - "/subscriptions/455d2c2f-e184-4751-8dd9-93c0a4d273f6/resourceGroups/c5359065-d1/providers/Microsoft.Network/publicIPAddresses/d1-aks-blue-egress-0"
+                outboundPortsAllocated: 5000
+              loadBalancerSku: standard #Standard
+              # networkMode: ''
+              networkPlugin: azure
+              
+              # ebpfDataPlane: cilium
+              networkPolicy: calico
+              # networkDataPlane: cilium
+              # test overlay with azure netpol
+              ## test no netpol at all
+              # networkPolicy: azure
+              networkPluginMode: overlay
+              podCidr: 192.168.0.0/16
+              outboundType: loadBalancer
+              serviceCidr: 10.1.0.0/18
+              serviceCidrs:
+                - 10.1.0.0/18
+            dnsPrefix: ""
+            oidcIssuerEnabled: true
+            localAccountDisabled: false
+            privateClusterEnabled: false
+            privateClusterPublicFqdnEnabled: false
+            roleBasedAccessControlEnabled: true
+            runCommandEnabled: true
+            skuTier: Free
+            supportPlan: KubernetesOfficial
+            workloadIdentityEnabled: true
+            resourceGroupName: gitops-example
+            tags:
+              provisioner: crossplane
+          writeConnectionSecretToRef:
+            name: ""
+            namespace: ""
+          # publishConnectionDetailsTo:
+          #   name: ""
+          #   namespace: ""
+          providerConfigRef:
+            name: olegen-lab         
+      patches:
+      # combine secretname
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "spec.name"
+          strategy: string
+          string:
+            fmt: "%s-conf-secret"
+        toFieldPath: "spec.writeConnectionSecretToRef.name"      
+      # Grab secret namespace
+      - type: FromCompositeFieldPath
+        fromFieldPath: "metadata.labels['crossplane.io/claim-namespace']"
+        toFieldPath: "spec.writeConnectionSecretToRef.namespace"      
+      # Grab name
+      - type: FromCompositeFieldPath
+        fromFieldPath: "spec.name"
+        toFieldPath: "metadata.name"
+      # Grab kubernetesVersion
+      - type: FromCompositeFieldPath
+        fromFieldPath: "spec.kubernetesVersion"
+        toFieldPath: "spec.forProvider.kubernetesVersion"
+      # Grab node count
+      - type: FromCompositeFieldPath
+        fromFieldPath: "spec.nodePool.nodeCount"
+        toFieldPath: "spec.forProvider.defaultNodePool.nodeCount"      
+      # Grab nodePool.maxPods
+      - type: FromCompositeFieldPath
+        fromFieldPath: "spec.nodePool.maxPods"
+        toFieldPath: "spec.forProvider.defaultNodePool.maxPods"
+      # Grab nodePool.name
+      - type: FromCompositeFieldPath
+        fromFieldPath: "spec.nodePool.name"
+        toFieldPath: "spec.forProvider.defaultNodePool.name"
+      # Grab nodePool.vmSize
+      - type: FromCompositeFieldPath
+        fromFieldPath: "spec.nodePool.vmSize"
+        toFieldPath: "spec.forProvider.defaultNodePool.vmSize"
+      # Grab nodePool.osDiskSizeGb
+      - type: FromCompositeFieldPath
+        fromFieldPath: "spec.nodePool.osDiskSizeGb"
+        toFieldPath: "spec.forProvider.defaultNodePool.osDiskSizeGb"
+      # Grab nodePool.vnetSubnetIdRef
+      - type: FromCompositeFieldPath
+        fromFieldPath: "spec.nodePool.vnetSubnetIdRef"
+        toFieldPath: "spec.forProvider.defaultNodePool.vnetSubnetIdRef.name"
+      # combine name for nodepool from composite
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "spec.name"
+          strategy: string
+          string:
+            fmt: "%s-nodepool"
+        toFieldPath: "spec.forProvider.nodeResourceGroup"
+      # Grab dnsPrefix
+      - type: FromCompositeFieldPath
+        fromFieldPath: "spec.name"
+        toFieldPath: "spec.forProvider.dnsPrefix"
+      # Update oidcIssuerUrl in status
+      - type: ToCompositeFieldPath
+        fromFieldPath: "status.atProvider.oidcIssuerUrl"
+        toFieldPath: status.oidcIssuerUrl
+      # Update oidcIssuerUrl in status
+      - type: ToCompositeFieldPath
+        fromFieldPath: "status.atProvider.id"
+        toFieldPath: status.targetResourceId
+      # Update aksPrincilpalId in status
+      - type: ToCompositeFieldPath
+        fromFieldPath: "status.atProvider.identity.principalId"
+        toFieldPath: status.aksPrincipalId
+      # Update kubeletObjectId in status
+      - type: ToCompositeFieldPath
+        fromFieldPath: "status.atProvider.kubeletIdentity.objectId"
+        toFieldPath: status.kubeletObjectId         
+
+    - name: helm-provider-config
+      readinessChecks:
+        - type: None      
+      base:  
+        apiVersion: helm.crossplane.io/v1beta1
+        # metadata:
+        #   name: dcp-np
+        kind: ProviderConfig
+        spec:
+          identity:
+            source: Secret
+            type: AzureServicePrincipalCredentials
+            secretRef:
+              namespace: crossplane-system
+              name: azure-secret-dcp-np
+              key: creds
+          # controlcluster creds
+          credentials:
+            secretRef:
+              key: kubeconfig
+              name: controlcluster-conf-secret #cluster-config
+              namespace: crossplane-system
+            source: Secret              
+      patches:    
+      # combine secretname
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "spec.name"
+          strategy: string
+          string:
+            fmt: "%s-conf-secret"
+        toFieldPath: "spec.credentials.secretRef.name"
+      # Grab secret namespace
+      - type: FromCompositeFieldPath
+        fromFieldPath: "metadata.labels['crossplane.io/claim-namespace']"
+        toFieldPath: "spec.credentials.secretRef.namespace"  
+      # combine name
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "spec.name"
+          strategy: string
+          string:
+            fmt: "%s-provider-config"
+        toFieldPath: "metadata.name" 
+
+    - name: kubernetes-provider-config
+      readinessChecks:
+        - type: None      
+      base:  
+        apiVersion: kubernetes.crossplane.io/v1alpha1
+        # metadata:
+        #   name: dcp-np
+        kind: ProviderConfig
+        spec:
+          identity:
+            source: Secret
+            type: AzureServicePrincipalCredentials
+            secretRef:
+              namespace: crossplane-system
+              name: azure-secret-dcp-np
+              key: creds
+          # controlcluster creds
+          credentials:
+            secretRef:
+              key: kubeconfig
+              name: controlcluster-conf-secret #cluster-config
+              namespace: crossplane-system
+            source: Secret              
+      patches:    
+      # combine secretname
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "spec.name"
+          strategy: string
+          string:
+            fmt: "%s-conf-secret"
+        toFieldPath: "spec.credentials.secretRef.name"
+      # Grab secret namespace
+      - type: FromCompositeFieldPath
+        fromFieldPath: "metadata.labels['crossplane.io/claim-namespace']"
+        toFieldPath: "spec.credentials.secretRef.namespace"  
+      # combine name
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "spec.name"
+          strategy: string
+          string:
+            fmt: "%s-provider-config"
+        toFieldPath: "metadata.name" 
+
+    - name: role-assignment
+      base:
+        apiVersion: authorization.azure.upbound.io/v1beta1
+        kind: RoleAssignment
+        metadata:
+          name: ra-aks-network-contributor
+        spec:
+          forProvider:
+            # principalId: "c0bdb2e4-93ef-4d0b-ba40-7770bff78bee"
+            # principalType: "User"
+            roleDefinitionName: "Network Contributor"
+            # scope: "/subscriptions/455d2c2f-e184-4751-8dd9-93c0a4d273f6/resourceGroups/c5359065/providers/Microsoft.Network/dnszones/c5359065.d3.services.store.net.sap"
+          providerConfigRef:
+            name: olegen-lab
+      patches:
+      # combine targetResourceId from composite
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "status.azure.subscriptionId"
+            - fromFieldPath: "spec.name"
+          strategy: string
+          string:
+            fmt: "/subscriptions/%s/resourceGroups/%s-nodepool"
+        toFieldPath: "spec.forProvider.scope"
+      # grab managedIdentityId
+      - type: FromCompositeFieldPath
+        fromFieldPath: status.aksPrincipalId
+        toFieldPath: spec.forProvider.principalId
+
+    - name: role-assignment-rg
+      base:
+        apiVersion: authorization.azure.upbound.io/v1beta1
+        kind: RoleAssignment
+        metadata:
+          name: ra-rg-aks-network-contributor
+        spec:
+          forProvider:
+            # principalId: "c0bdb2e4-93ef-4d0b-ba40-7770bff78bee"
+            # principalType: "User"
+            roleDefinitionName: "Network Contributor"
+            # scope: "/subscriptions/455d2c2f-e184-4751-8dd9-93c0a4d273f6/resourceGroups/c5359065/providers/Microsoft.Network/dnszones/c5359065.d3.services.store.net.sap"
+          providerConfigRef:
+            name: olegen-lab
+      patches:
+      # combine targetResourceId from composite
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "status.azure.subscriptionId"
+            - fromFieldPath: "spec.rgName"
+          strategy: string
+          string:
+            fmt: "/subscriptions/%s/resourceGroups/%s"
+        toFieldPath: "spec.forProvider.scope"
+      # grab managedIdentityId
+      - type: FromCompositeFieldPath
+        fromFieldPath: status.aksPrincipalId
+        toFieldPath: spec.forProvider.principalId
+
+    # Will be depricated soon!
+    # # Backward compatibiity to prod AKV access from akv2k8s controller
+    # - name: access-policy-akv2k8s
+    #   base:
+    #     apiVersion: keyvault.azure.upbound.io/v1beta1
+    #     kind: AccessPolicy
+    #     metadata:
+    #       name: akv-access-policy-akv2k8s
+    #     spec:
+    #       forProvider:
+    #         secretPermissions:
+    #           - Get
+    #         certificatePermissions:
+    #           - Get
+    #         keyPermissions:
+    #           - Get
+    #           - Decrypt
+    #           - Encrypt
+    #         keyVaultIdRef:
+    #           name: kv-olegen
+    #         # mandatory
+    #         # objectId: ""
+    #       providerConfigRef:
+    #         name: olegen-lab            
+    #   patches:
+    #   # grab azure.tenantId
+    #   - type: FromCompositeFieldPath
+    #     fromFieldPath: "status.azure.tenantId"
+    #     toFieldPath: spec.forProvider.tenantId
+    #   # grab objectId
+    #   - type: FromCompositeFieldPath
+    #     fromFieldPath: status.kubeletObjectId
+    #     toFieldPath: spec.forProvider.objectId      
+    #   # combine from composite aks.name
+    #   - type: CombineFromComposite
+    #     combine:
+    #       variables:
+    #         - fromFieldPath: "spec.name"
+    #       strategy: string
+    #       string:
+    #         fmt: "sap-dcp-keyvault-%s-accesspolicy"
+    #     toFieldPath: "metadata.name"
+
+    # - name: role-assignment-acr
+    #   base:
+    #     apiVersion: authorization.azure.upbound.io/v1beta1
+    #     kind: RoleAssignment
+    #     metadata:
+    #       name: ra-aks-acr
+    #     spec:
+    #       forProvider:
+    #         # principalId: "c0bdb2e4-93ef-4d0b-ba40-7770bff78bee"
+    #         # principalType: "User"
+    #         roleDefinitionName: "AcrPull"
+    #         scope: "/subscriptions/17b59f0c-c482-487e-aca8-b3b98880e8cb/resourceGroups/registry/providers/Microsoft.ContainerRegistry/registries/sapdcpplayground"
+    #       providerConfigRef:
+    #         name: ecommerce
+    #   patches:
+    #   # grab managedIdentityId
+    #   - type: FromCompositeFieldPath
+    #     fromFieldPath: status.kubeletObjectId
+    #     toFieldPath: spec.forProvider.principalId
+
+    # aks kubeconfig secret for new cluster
+    - name: aks-secret
+      base:
+        apiVersion: kubernetes.crossplane.io/v1alpha2
+        kind: Object
+        metadata:
+          name: aks-secret
+          labels:
+            cluster-name: ""
+        spec:
+          references:
+            # - patchesFrom:
+            #     apiVersion: v1
+            #     fieldPath: data.kubeconfig
+            #     kind: Secret
+            #     name: cluster-conf-secret
+            #     namespace: default
+            # - patchesFrom:
+            #     apiVersion: v1
+            #     fieldPath: data[attribute.kube_admin_config_raw]
+            #     kind: Secret
+            #     name: cluster-conf-secret
+            #     namespace: default
+            #   toFieldPath: data.kube_admin_config_raw
+            - patchesFrom:
+                apiVersion: v1
+                fieldPath: data[attribute.kube_config.0.cluster_ca_certificate]
+                kind: Secret
+                name: cluster-conf-secret
+                namespace: default
+              toFieldPath: data.cluster_ca_certificate
+            - patchesFrom:
+                apiVersion: v1
+                fieldPath: data[attribute.kube_config.0.host]
+                kind: Secret
+                name: cluster-conf-secret
+                namespace: default
+              toFieldPath: data.host                                           
+          forProvider:
+            manifest:        
+              apiVersion: v1
+              kind: Secret
+              metadata:
+                name: cluster-conf-secret
+                namespace: default
+                labels:
+                  created-by: "crossplane"
+                  host-composition: "aks-composition"
+                  crossplane.io/claim-namespace: ""
+                  crossplane.io/claim-name: ""
+                  crossplane.io/composite: ""
+                annotations:
+                  reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+                  reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+                  reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "kyma-dashboard"                  
+              # type: Opaque
+          providerConfigRef:
+            name: controlcluster-provider
+      patches:
+      # Grab providerConfigRef for a new cluster
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "spec.name"
+          strategy: string
+          string:
+            fmt: "%s-provider-config"
+        toFieldPath: "spec.providerConfigRef.name"
+      # Grab secretRef.name
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "spec.name"
+          strategy: string
+          string:
+            fmt: "%s-conf-secret"
+        toFieldPath: "spec.references[0].patchesFrom.name"
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "spec.name"
+          strategy: string
+          string:
+            fmt: "%s-conf-secret"
+        toFieldPath: "spec.references[1].patchesFrom.name"
+      # Grab cluster label
+      - type: FromCompositeFieldPath
+        fromFieldPath: "spec.name"
+        toFieldPath: "metadata.labels['cluster-name']"
+      # Grab cluster label
+      - type: FromCompositeFieldPath
+        fromFieldPath: "metadata.labels['crossplane.io/claim-namespace']"
+        toFieldPath: "spec.forProvider.manifest.metadata.labels['crossplane.io/claim-namespace']"
+      - type: FromCompositeFieldPath
+        fromFieldPath: "metadata.labels['crossplane.io/claim-name']"
+        toFieldPath: "spec.forProvider.manifest.metadata.labels['crossplane.io/claim-name']"
+      - type: FromCompositeFieldPath
+        fromFieldPath: "metadata.labels['crossplane.io/composite']"
+        toFieldPath: "spec.forProvider.manifest.metadata.labels['crossplane.io/composite']"

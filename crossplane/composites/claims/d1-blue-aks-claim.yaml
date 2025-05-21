@@ -10,9 +10,9 @@ spec:
   rgName: gitops-example
   kubernetesVersion: 1.31.2
   nodePool:
-    nodeCount: 1
+    nodeCount: 2
     maxPods: 200
     name: pool
-    vmSize: Standard_D32s_v5
+    vmSize: Standard_A2_v2
     osDiskSizeGb: 128
     vnetSubnetIdRef: d1-blue-subnet
