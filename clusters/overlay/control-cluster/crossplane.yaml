@@ -10,7 +10,7 @@ metadata:
     toolkit.fluxcd.io/tenant: crossplane  
 spec:
   interval: 10m0s
-  path: ./clusters/control-cluster/crossplane/providers
+  path: ./clusters/base/crossplane/providers
   prune: true
   sourceRef:
     kind: GitRepository
@@ -27,7 +27,7 @@ metadata:
     toolkit.fluxcd.io/tenant: crossplane  
 spec:
   interval: 10m0s
-  path: ./clusters/control-cluster/crossplane/envConfigs
+  path: ./clusters/base/crossplane/envConfigs
   prune: true
   sourceRef:
     kind: GitRepository
@@ -44,7 +44,7 @@ metadata:
     toolkit.fluxcd.io/tenant: crossplane  
 spec:
   interval: 10m0s
-  path: ./clusters/control-cluster/crossplane/providerConfig
+  path: ./clusters/base/crossplane/providerConfig
   prune: true
   sourceRef:
     kind: GitRepository
@@ -61,7 +61,7 @@ spec:
   interval: 10m0s
   dependsOn:
     - name: crossplane-provider-configs
-  path: ./clusters/control-cluster/crossplane/resources
+  path: ./clusters/base/crossplane/resources
   prune: true
   sourceRef:
     kind: GitRepository
@@ -78,7 +78,7 @@ spec:
   interval: 10m0s
   dependsOn:
     - name: crossplane-env-configs
-  path: ./clusters/control-cluster/crossplane/composites/compositions
+  path: ./clusters/base/crossplane/composites/compositions
   prune: true
   sourceRef:
     kind: GitRepository
@@ -93,7 +93,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./clusters/control-cluster/crossplane/composites/definitions
+  path: ./clusters/base/crossplane/composites/definitions
   prune: true
   sourceRef:
     kind: GitRepository
@@ -110,7 +110,7 @@ spec:
   interval: 10m0s
   dependsOn:
     - name: crossplane-composite-definitions
-  path: ./clusters/control-cluster/crossplane/composites/claims
+  path: ./clusters/base/crossplane/composites/claims
   prune: true
   sourceRef:
     kind: GitRepository
@@ -127,7 +127,7 @@ spec:
   interval: 10m0s
   dependsOn:
     - name: crossplane-composite-claims
-  path: ./clusters/control-cluster/crossplane/composites/claims/online
+  path: ./clusters/base/crossplane/composites/claims/online
   prune: true
   sourceRef:
     kind: GitRepository
@@ -144,7 +144,7 @@ spec:
   interval: 10m0s
   dependsOn:
     - name: crossplane-composite-claim-online
-  path: ./clusters/control-cluster/crossplane/composites/claims/flux
+  path: ./clusters/base/crossplane/composites/claims/flux
   prune: true
   sourceRef:
     kind: GitRepository

@@ -15,7 +15,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./clusters/control-cluster/infrastructure/controllers
+  path: ./clusters/overlay/control-cluster/infrastructure/controllers
   prune: true
   wait: true
 ---
@@ -35,5 +35,5 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./clusters/control-cluster/infrastructure/configs
+  path: ./clusters/overlay/control-cluster/infrastructure/configs
   prune: true
