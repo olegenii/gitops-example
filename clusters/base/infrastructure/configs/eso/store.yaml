@@ -1,4 +1,4 @@
-apiVersion: external-secrets.io/v1alpha1
+apiVersion: external-secrets.io/v1
 kind: ClusterSecretStore
 metadata:
   name: kv-olegen
@@ -15,7 +15,9 @@ spec:
         # the azure service principal credentials
         clientId:
           name: azure-olegen-lab
-          key: ClientID
+          key: creds
+          namespace: crossplane-system
         clientSecret:
           name: azure-olegen-lab
-          key: ClientSecret
+          key: creds
+          namespace: crossplane-system
