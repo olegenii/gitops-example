@@ -1,0 +1,55 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xfluxoperators.workload.dcp.sap
+spec:
+  group: workload.dcp.sap
+  names:
+    kind: XFluxOperator
+    plural: xfluxoperators
+  claimNames:
+    kind: FluxOperator
+    plural: fluxoperators
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              name:
+                type: string
+              rgName:
+                type: string
+              flux:
+                type: object
+                properties:
+                  url:
+                    type: string
+                  version:
+                    type: string                    
+                  branch:
+                    type: string                    
+                  secretRef:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                    required:
+                      - name
+                      - namespace
+                required:
+                  - url
+                  # - version                  
+                  - branch
+                  - secretRef                        
+            required:
+            - name
+            - rgName
+            - flux   

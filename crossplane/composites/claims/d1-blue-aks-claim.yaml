@@ -15,4 +15,4 @@ spec:
     name: pool
     vmSize: Standard_A2_v2
     osDiskSizeGb: 128
-    vnetSubnetIdRef: d1-blue-subnet
+    vnetSubnetIdRef: d1-blue-aks-snet

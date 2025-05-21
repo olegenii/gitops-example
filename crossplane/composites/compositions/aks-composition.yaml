@@ -13,6 +13,7 @@ spec:
         kind: KubernetesCluster
         spec:
           forProvider:
+            location: westeurope
             automaticChannelUpgrade: ''
             azureActiveDirectoryRoleBasedAccessControl:
               azureRbacEnabled: false
@@ -47,15 +48,7 @@ spec:
               dnsServiceIp: 10.1.0.10
               ipVersions:
                 - IPv4
-              loadBalancerProfile:
-                idleTimeoutInMinutes: 5
-                managedOutboundIpCount: 0
-                managedOutboundIpv6Count: 0
-                outboundIpAddressIds:
-                  - ""
-                  # - "/subscriptions/455d2c2f-e184-4751-8dd9-93c0a4d273f6/resourceGroups/c5359065-d1/providers/Microsoft.Network/publicIPAddresses/d1-aks-blue-egress-0"
-                outboundPortsAllocated: 5000
-              loadBalancerSku: standard #Standard
+              # loadBalancerSku: free #Standard
               # networkMode: ''
               networkPlugin: azure
               
