@@ -10,6 +10,8 @@ metadata:
     toolkit.fluxcd.io/tenant: crossplane  
 spec:
   interval: 10m0s
+  dependsOn:
+    - name: infra-controllers
   path: ./clusters/base/crossplane/providers
   prune: true
   sourceRef:
@@ -27,6 +29,8 @@ metadata:
     toolkit.fluxcd.io/tenant: crossplane  
 spec:
   interval: 10m0s
+  dependsOn:
+    - name: infra-controllers  
   path: ./clusters/base/crossplane/envConfigs
   prune: true
   sourceRef:
