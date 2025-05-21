@@ -15,7 +15,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./clusters/overlay/control-cluster/infrastructure/controllers
+  path: ./infrastructure/overlay/control-cluster/controllers
   prune: true
   wait: true
 ---
@@ -25,7 +25,7 @@ metadata:
   name: infra-configs
   namespace: flux-system
   labels:
-    toolkit.fluxcd.io/tenant: crossplane  
+    toolkit.fluxcd.io/tenant: crossplane
 spec:
   dependsOn:
     - name: infra-controllers
@@ -35,5 +35,5 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./clusters/overlay/control-cluster/infrastructure/configs
+  path: ./infrastructure/overlay/control-cluster/configs
   prune: true

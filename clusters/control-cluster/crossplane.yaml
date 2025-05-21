@@ -12,7 +12,7 @@ spec:
   interval: 10m0s
   dependsOn:
     - name: infra-controllers
-  path: ./clusters/base/crossplane/providers
+  path: ./crossplane/providers
   prune: true
   sourceRef:
     kind: GitRepository
@@ -31,7 +31,7 @@ spec:
   interval: 10m0s
   dependsOn:
     - name: infra-controllers  
-  path: ./clusters/base/crossplane/envConfigs
+  path: ./crossplane/envConfigs
   prune: true
   sourceRef:
     kind: GitRepository
@@ -48,7 +48,7 @@ metadata:
     toolkit.fluxcd.io/tenant: crossplane  
 spec:
   interval: 10m0s
-  path: ./clusters/base/crossplane/providerConfig
+  path: ./crossplane/providerConfig
   prune: true
   sourceRef:
     kind: GitRepository
@@ -65,7 +65,7 @@ spec:
   interval: 10m0s
   dependsOn:
     - name: crossplane-provider-configs
-  path: ./clusters/base/crossplane/resources
+  path: ./crossplane/resources
   prune: true
   sourceRef:
     kind: GitRepository
@@ -82,7 +82,7 @@ spec:
   interval: 10m0s
   dependsOn:
     - name: crossplane-env-configs
-  path: ./clusters/base/crossplane/composites/compositions
+  path: ./crossplane/composites/compositions
   prune: true
   sourceRef:
     kind: GitRepository
@@ -97,7 +97,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./clusters/base/crossplane/composites/definitions
+  path: ./crossplane/composites/definitions
   prune: true
   sourceRef:
     kind: GitRepository
@@ -114,7 +114,7 @@ spec:
   interval: 10m0s
   dependsOn:
     - name: crossplane-composite-definitions
-  path: ./clusters/base/crossplane/composites/claims
+  path: ./crossplane/composites/claims
   prune: true
   sourceRef:
     kind: GitRepository
@@ -131,7 +131,7 @@ spec:
   interval: 10m0s
   dependsOn:
     - name: crossplane-composite-claims
-  path: ./clusters/base/crossplane/composites/claims/online
+  path: ./crossplane/composites/claims/online
   prune: true
   sourceRef:
     kind: GitRepository
@@ -148,7 +148,7 @@ spec:
   interval: 10m0s
   dependsOn:
     - name: crossplane-composite-claim-online
-  path: ./clusters/base/crossplane/composites/claims/flux
+  path: ./crossplane/composites/claims/flux
   prune: true
   sourceRef:
     kind: GitRepository
