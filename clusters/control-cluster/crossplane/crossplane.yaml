@@ -44,7 +44,7 @@ metadata:
     toolkit.fluxcd.io/tenant: crossplane  
 spec:
   interval: 10m0s
-  path: ./clusters/control-cluster/rossplane/providerConfig
+  path: ./clusters/control-cluster/crossplane/providerConfig
   prune: true
   sourceRef:
     kind: GitRepository
