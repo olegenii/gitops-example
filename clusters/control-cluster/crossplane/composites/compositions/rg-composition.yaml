@@ -1,0 +1,25 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: rg-composite
+spec:
+  compositeTypeRef:
+    apiVersion: azure.infra.dcp.sap/v1alpha1
+    kind: XResourceGroup
+  resources:
+    - name: rg
+      base:
+        apiVersion: azure.upbound.io/v1beta1
+        kind: ResourceGroup
+        spec:
+          forProvider:
+            location: "westeurope"
+            tags:
+              provisioner: crossplane
+          providerConfigRef:
+            name: olegen-lab
+      patches:
+      # Grab name
+      - type: FromCompositeFieldPath
+        fromFieldPath: "spec.name"
+        toFieldPath: "metadata.name"

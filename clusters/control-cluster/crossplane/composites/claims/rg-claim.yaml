@@ -1,0 +1,9 @@
+apiVersion: azure.infra.dcp.sap/v1alpha1
+kind: ResourceGroup
+metadata:
+  name: gitops-example
+  namespace: default
+  labels:
+    env: d1
+spec:
+  name: gitops-example

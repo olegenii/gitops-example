@@ -1,0 +1,93 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xclusters.azure.infra.dcp.sap
+spec:
+  group: azure.infra.dcp.sap
+  names:
+    kind: XCluster
+    plural: xclusters
+  claimNames:
+    kind: Cluster
+    plural: clusters
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              name:
+                type: string
+              rgName:
+                type: string
+              kubernetesVersion:
+                type: string
+              nodePool:
+                type: object
+                properties:
+                  enableAutoScaling:
+                    type: boolean
+                  maxCount:
+                    type: integer
+                  minCount:
+                    type: integer
+                  nodeCount:
+                    type: integer                                                       
+                  maxPods:
+                    type: integer
+                  name:
+                    type: string
+                  vmSize:
+                    type: string
+                  osDiskSizeGb:
+                    type: integer
+                  vnetSubnetIdRef:
+                    type: string                                                                                         
+                required:
+                # - enableAutoScaling
+                # - maxCount
+                # - minCount
+                - nodeCount
+                - maxPods
+                - name
+                - vmSize
+                - osDiskSizeGb
+                - vnetSubnetIdRef
+            required:
+            - name
+            - rgName
+            - kubernetesVersion
+            - nodePool
+          status:
+            type: object
+            properties:
+              oidcIssuerUrl:
+                type: string
+              azure:
+                type: object
+                properties:
+                  subscriptionId:
+                    type: string
+                  tenantId:
+                    type: string
+              managedIdentityId:
+                type: string
+              managedIdentityClientId:
+                type: string
+              targetResourceId:
+                type: string
+              aksPrincipalId:
+                type: string
+              kubeletObjectId:
+                type: string
+              # clusterCA:
+              #   type: string
+              # clusterServer:
+              #   type: string
+              # busolaToken:
+              #   type: string                

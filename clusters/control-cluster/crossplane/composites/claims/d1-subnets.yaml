@@ -1,0 +1,39 @@
+apiVersion: network.azure.upbound.io/v1beta1
+kind: Subnet
+metadata:
+  name: d1-blue-aks-snet
+spec:
+  forProvider:
+    addressPrefixes:
+      - 10.0.16.0/20
+    resourceGroupName: gitops-example
+    serviceEndpoints:
+      - Microsoft.Storage
+      - Microsoft.Sql
+      - Microsoft.AzureCosmosDB
+      - Microsoft.KeyVault
+    virtualNetworkName: d1-vnet
+    # virtualNetworkNameRef:
+    #   name: d1-vnet
+  providerConfigRef:
+    name: olegen-lab
+---
+apiVersion: network.azure.upbound.io/v1beta1
+kind: Subnet
+metadata:
+  name: d1-green-aks-snet
+spec:
+  forProvider:
+    addressPrefixes:
+      - 10.0.32.0/20
+    resourceGroupName: gitops-example
+    serviceEndpoints:
+      - Microsoft.Storage
+      - Microsoft.Sql
+      - Microsoft.AzureCosmosDB
+      - Microsoft.KeyVault
+    virtualNetworkName: d1-vnet
+    # virtualNetworkNameRef:
+    #   name: d1-vnet
+  providerConfigRef:
+    name: olegen-lab

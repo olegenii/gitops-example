@@ -21,7 +21,7 @@ All secrets store inside `.env` file.
 2. Create/fork a repo where flux will store state.
 3. Create a [GitHub App for authentication to flux repo](https://fluxcd.io/blog/2025/04/flux-operator-github-app-bootstrap/#bootstrap-using-flux-operator-and-helm).
 4. Save pem cert from GHApp into `ghapp.pem` file. Install GHApp into flux repo with at least write code permission.
-5. Execute `start.sh` - it creates kind cluster and bootstrap flux into it.
+5. Execute `start.sh` - it creates kind cluster and bootstrap flux into it. It also create k8s secret with azure creds for crossplane `ProviderConfig`.
 
 Finish with `stop.sh` - it destroy kind cluster. 
 >> Note: Check Azure resource after destroying kind control cluster!

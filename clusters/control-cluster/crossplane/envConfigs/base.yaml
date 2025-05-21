@@ -6,7 +6,7 @@ metadata:
     env: base
 data:
   # redefine on env layer
-  providerConfig: dcp-np
+  providerConfig: olegen-lab
   location: North Europe
   tags:
     provisioner: crossplane

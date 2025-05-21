@@ -1,0 +1,18 @@
+apiVersion: azure.infra.dcp.sap/v1alpha1
+kind: Cluster
+metadata:
+  name: d1-blue
+  namespace: default
+  labels:
+    env: d1
+spec:
+  name: d1-blue
+  rgName: gitops-example
+  kubernetesVersion: 1.31.2
+  nodePool:
+    nodeCount: 1
+    maxPods: 200
+    name: pool
+    vmSize: Standard_D32s_v5
+    osDiskSizeGb: 128
+    vnetSubnetIdRef: d1-blue-subnet

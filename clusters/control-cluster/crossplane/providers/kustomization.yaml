@@ -4,5 +4,6 @@ resources:
   - azure-management.yaml
   - azure-containerservice.yaml
   - azure-keyvault.yaml
+  - azure-network.yaml
   - kubernetes.yaml
   - helm.yaml
