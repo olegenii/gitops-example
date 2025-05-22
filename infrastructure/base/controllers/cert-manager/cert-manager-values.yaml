@@ -1,0 +1,15 @@
+installCRDs: true
+# Azure Workload identity
+# https://cert-manager.io/docs/configuration/acme/dns01/azuredns/#managed-identity-using-aad-pod-identity
+
+# How to assign a role on some managed identity
+#  az role assignment create \                                                                                                                                                                                             1 ↵
+#     --role "DNS Zone Contributor" \
+#     --assignee-principal-type ServicePrincipal  --assignee-object-id f8eb02e8-5d00-43ec-a323-0954f9a34d8c \
+#     --scope $(az network dns zone show --name crossplane.d3.services.store.net.sap --resource-group crossplane  -o tsv --query id)
+
+podLabels:
+  azure.workload.identity/use: "true"
+serviceAccount:
+  labels:
+    azure.workload.identity/use: "true"

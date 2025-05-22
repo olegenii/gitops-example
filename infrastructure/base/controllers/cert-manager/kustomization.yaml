@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - resources/ns.yaml
+  - resources/repo.yaml
+  - resources/release.yaml
+configMapGenerator:
+  - name: cert-manager-values-cm
+    namespace: cert-manager
+    files:
+      - values.yaml=cert-manager-values.yaml
+configurations:
+  - kustomizeconfig.yaml
