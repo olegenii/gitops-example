@@ -1,0 +1,17 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: komoplane
+  namespace: crossplane-system
+spec:
+  chart:
+    spec:
+      chart: komoplane
+      # version: "4.10.0"
+      sourceRef:
+        kind: HelmRepository
+        name: komodorio
+  interval: 1h0m0s
+  valuesFrom:
+    - kind: ConfigMap
+      name: komoplane-values-cm

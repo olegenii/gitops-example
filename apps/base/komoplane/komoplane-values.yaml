@@ -1,0 +1,8 @@
+adminUser:
+  create: true
+  passwordHash: $2a$10$ot9zsXEvUA.gAjiYCrRpmObm0CFornikwCizXK9PijbvxNNHSqEEO
+  username: admin
+  createSecret: true
+envVars:
+- name: WEAVE_GITOPS_FEATURE_OIDC_BUTTON_LABEL
+  value: Login with SSO
