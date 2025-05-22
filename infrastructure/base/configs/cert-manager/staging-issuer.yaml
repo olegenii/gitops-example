@@ -34,6 +34,6 @@ spec:
               clientID: 543ff999-924c-493e-870d-b775be101440
             subscriptionID: 1627ebbb-525b-4eea-8684-52d7545cfef9
             resourceGroupName: rg_learn
-            hostedZoneName: gitops.olegen.fun
+            hostedZoneName: olegen.fun
             # # Azure Cloud Environment, default to AzurePublicCloud
             environment: AzurePublicCloud
