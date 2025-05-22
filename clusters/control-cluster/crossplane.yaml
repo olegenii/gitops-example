@@ -9,7 +9,7 @@ metadata:
   labels:
     toolkit.fluxcd.io/tenant: crossplane  
 spec:
-  interval: 10m0s
+  interval: 5m0s
   dependsOn:
     - name: infra-controllers
   path: ./crossplane/providers
@@ -28,7 +28,7 @@ metadata:
   labels:
     toolkit.fluxcd.io/tenant: crossplane  
 spec:
-  interval: 10m0s
+  interval: 5m0s
   dependsOn:
     - name: infra-controllers  
   path: ./crossplane/envConfigs
@@ -47,7 +47,7 @@ metadata:
   labels:
     toolkit.fluxcd.io/tenant: crossplane  
 spec:
-  interval: 10m0s
+  interval: 5m0s
   path: ./crossplane/providerConfig
   prune: true
   sourceRef:
@@ -62,7 +62,7 @@ metadata:
   name: crossplane-resources
   namespace: flux-system
 spec:
-  interval: 10m0s
+  interval: 5m0s
   dependsOn:
     - name: crossplane-provider-configs
   path: ./crossplane/resources
@@ -96,7 +96,7 @@ metadata:
   name: crossplane-composite-definitions
   namespace: flux-system
 spec:
-  interval: 10m0s
+  interval: 5m0s
   path: ./crossplane/composites/definitions
   prune: true
   sourceRef:
@@ -111,7 +111,7 @@ metadata:
   name: crossplane-composite-claims
   namespace: flux-system
 spec:
-  interval: 10m0s
+  interval: 5m0s
   dependsOn:
     - name: crossplane-composite-definitions
   path: ./crossplane/composites/claims
@@ -128,7 +128,7 @@ metadata:
   name: crossplane-composite-claim-online
   namespace: flux-system
 spec:
-  interval: 10m0s
+  interval: 5m0s
   dependsOn:
     - name: crossplane-composite-claims
   path: ./crossplane/composites/claims/online
@@ -145,7 +145,7 @@ metadata:
   name: crossplane-composite-claim-flux
   namespace: flux-system
 spec:
-  interval: 10m0s
+  interval: 5m0s
   dependsOn:
     - name: crossplane-composite-claim-online
   path: ./crossplane/composites/claims/flux
