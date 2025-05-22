@@ -3,49 +3,6 @@ kind: Composition
 metadata:
   name: flux-operator-composite
 spec:
-  environment:
-    environmentConfigs:
-    - type: Selector
-      selector:
-        mode: Single
-        matchLabels:
-          - key: env
-            type: Value
-            value: base
-    - type: Selector
-      selector:
-        mode: Multiple 
-        minMatch: 0
-        maxMatch: 1
-        matchLabels:
-          - key: env
-            type: FromCompositeFieldPath
-            valueFromFieldPath: metadata.labels.env
-            fromFieldPathPolicy: Optional
-          - key: issued-by
-            type: Value
-            value: predefined 
-    - type: Selector
-      selector:
-        mode: Multiple 
-        minMatch: 0
-        matchLabels:
-          - key: scope
-            type: FromCompositeFieldPath
-            valueFromFieldPath: metadata.labels.scope
-            fromFieldPathPolicy: Optional 
-    - type: Selector
-      selector:
-        mode: Multiple 
-        minMatch: 2
-        matchLabels:
-          - key: env
-            type: FromCompositeFieldPath
-            valueFromFieldPath: metadata.labels.env
-            fromFieldPathPolicy: Optional
-          - key: issued-by
-            type: Value
-            value: crossplane     
   compositeTypeRef:
     apiVersion: workload.dcp.sap/v1alpha1
     kind: XFluxOperator
@@ -139,7 +96,7 @@ spec:
                   fluxcd.controlplane.io/reconcileTimeout: "5m"
               spec:
                 distribution:
-                  version: "2.4.x"
+                  version: "2.5.x"
                   registry: "ghcr.io/fluxcd"
                   artifact: "oci://ghcr.io/controlplaneio-fluxcd/flux-operator-manifests"
                 components:
@@ -156,11 +113,11 @@ spec:
                   url: "https://github.com/my-org/my-fleet.git"
                   ref: "refs/heads/main"
                   path: "clusters/my-cluster"
-                  pullSecret: "flux-system-new"
+                  pullSecret: "flux-system"
                   provider: github
                 storage:
                   class: "default"
-                  size: "10Gi"
+                  size: "1Gi"
                 kustomize:
                   patches:
                     # target image-reflector-controller deployment
@@ -188,37 +145,6 @@ spec:
                       target:
                         kind: ServiceAccount
                         name: "image-reflector-controller"
-                    # increase controllers performance
-                    - patch: |                  
-                        - op: add
-                          path: /spec/template/spec/containers/0/args/-
-                          value: --concurrent=10
-                      target:
-                        kind: Deployment
-                        name: "(kustomize-controller|helm-controller|source-controller|notification-controller|image-automation-controller|image-reflector-controller)"
-                    # scrape metrics for all controllers for dynatrace
-                    - patch: |
-                        - op: add
-                          path: /spec/template/metadata/annotations/metrics.dynatrace.com~1scrape
-                          value: "true"
-                        - op: add
-                          path: /spec/template/metadata/annotations/metrics.dynatrace.com~1port
-                          value: "8080"
-                        - op: add
-                          path: /spec/template/metadata/annotations/metrics.dynatrace.com~1path
-                          value: "/metrics"
-                      target:
-                        kind: Deployment
-                        name: >-
-                          (kustomize-controller|helm-controller|source-controller|notification-controller|image-automation-controller|image-reflector-controller)                    
-
-                    - patch: |
-                        - op: add
-                          path: /spec/provider
-                          value: "github"
-                      target:
-                        kind: GitRepository
-                        name: flux-system
           providerConfigRef:
             name: controlcluster-provider
       patches:
