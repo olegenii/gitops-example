@@ -1,0 +1,27 @@
+namespace: ingress-nginx
+commonLabels:
+  app: nginx
+controller:
+  # allowSnippetAnnotations: true
+  # extraArgs:
+  #   enable-ssl-passthrough: true
+  replicaCount: 1
+  # nodeSelector:
+  #   kubernetes.io/os: linux
+  # metrics:
+  #   enabled: true
+  #   serviceMonitor:
+  #     enabled: true
+  #     additionalLabels:
+  #       # release: "prometheus-operator"
+  #       release: "kube-prometheus-stack"
+  # service:
+  #   # external.enabled: false
+  #   annotations:
+  #     service.beta.kubernetes.io/azure-load-balancer-resource-group: dcp-pip-nonprod
+  #     service.beta.kubernetes.io/azure-pip-name: crossplane-egress-0
+  #     service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
+# serviceAccount:
+#   annotations:
+#     azure.workload.identity/client-id: "f142fc95-cdbb-4988-b32d-8d117990306c"
+#     azure.workload.identity/tenant-id: "42f7676c-f455-423c-82f6-dc2d99791af7"

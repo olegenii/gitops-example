@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - ../../../base/controllers/eso
   - ../../../base/controllers/cert-manager
+  - ../../../base/controllers/ingress-nginx

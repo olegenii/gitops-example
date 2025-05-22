@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: flux-ingress
+  namespace: flux-system
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+spec:
+  tls:
+  - hosts:
+    - "*.gitops.olegen.fun"
+    - "gitops.olegen.fun"
+    secretName: le-cert-wildcard
+  rules:
+  - host: flux.gitops.olegen.fun
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ww-gitops-weave-gitops
+            port:
+              number: 9001
+  ingressClassName: nginx
