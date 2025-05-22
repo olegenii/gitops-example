@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - rg-composition.yaml
   - aks-composition.yaml
+  - flux-operator-composition.yaml

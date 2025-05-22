@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - rg-definition.yaml
   - aks-definition.yaml
+  - flux-operator-definition.yaml
