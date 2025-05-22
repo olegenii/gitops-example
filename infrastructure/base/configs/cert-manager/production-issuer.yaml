@@ -1,0 +1,39 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+spec:
+  acme:
+    # The ACME server URL
+    server: https://acme-v02.api.letsencrypt.org/directory
+    # Email address used for ACME registration
+    email: oleg.satalkin@sap.com
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: letsencrypt-staging
+    # Enable the HTTP-01 challenge provider
+    # Note: endpoint should be public accessible!!!
+    solvers:
+      # - http01:
+      #     ingress:
+      #       ingressClassName: nginx
+      - dns01:
+          azureDNS:           
+            
+            # SP approach
+            # clientID: f142fc95-cdbb-4988-b32d-8d117990306c
+            # clientSecretSecretRef:
+            # # The following is the secret we created in Kubernetes. Issuer will use this to present challenge to Azure DNS.
+            #   name: azuredns-config
+            #   key: client-secret
+            # tenantID: 42f7676c-f455-423c-82f6-dc2d99791af7
+            
+            # Workload identity approach
+            # cert-manager managed identity ID needed
+            managedIdentity:
+              clientID: 543ff999-924c-493e-870d-b775be101440
+            subscriptionID: 1627ebbb-525b-4eea-8684-52d7545cfef9
+            resourceGroupName: rg_learn
+            hostedZoneName: gitops.olegen.fun
+            # # Azure Cloud Environment, default to AzurePublicCloud
+            environment: AzurePublicCloud

@@ -4,3 +4,18 @@ resources:
   - ../../../base/controllers/eso
   - ../../../base/controllers/cert-manager
   - ../../../base/controllers/ingress-nginx
+
+configMapGenerator:
+  - name: external-secrets-values-cm
+    namespace: external-secrets
+    behavior: merge
+    files:
+      - overlay.yaml=external-secrets-values.yaml
+configurations:
+  - kustomizeconfig.yaml
+
+patches:
+  - path: patches/external-secrets.yaml
+    target:
+      name: external-secrets
+      kind: HelmRelease 
