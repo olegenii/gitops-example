@@ -3,3 +3,9 @@ kind: Kustomization
 resources:
   - ../../../base/configs/eso
   - ../../../base/configs/cert-manager
+
+patches:
+  - path: patches/store.yaml
+    target:
+      name: kv-olegen
+      kind: ClusterSecretStore
