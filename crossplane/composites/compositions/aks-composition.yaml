@@ -175,7 +175,7 @@ spec:
             type: AzureServicePrincipalCredentials
             secretRef:
               namespace: crossplane-system
-              name: azure-secret-dcp-np
+              name: azure-olegen-lab
               key: creds
           # controlcluster creds
           credentials:
@@ -222,7 +222,7 @@ spec:
             type: AzureServicePrincipalCredentials
             secretRef:
               namespace: crossplane-system
-              name: azure-secret-dcp-np
+              name: azure-olegen-lab
               key: creds
           # controlcluster creds
           credentials:
@@ -314,49 +314,6 @@ spec:
       - type: FromCompositeFieldPath
         fromFieldPath: status.aksPrincipalId
         toFieldPath: spec.forProvider.principalId
-
-    # Will be depricated soon!
-    # # Backward compatibiity to prod AKV access from akv2k8s controller
-    # - name: access-policy-akv2k8s
-    #   base:
-    #     apiVersion: keyvault.azure.upbound.io/v1beta1
-    #     kind: AccessPolicy
-    #     metadata:
-    #       name: akv-access-policy-akv2k8s
-    #     spec:
-    #       forProvider:
-    #         secretPermissions:
-    #           - Get
-    #         certificatePermissions:
-    #           - Get
-    #         keyPermissions:
-    #           - Get
-    #           - Decrypt
-    #           - Encrypt
-    #         keyVaultIdRef:
-    #           name: kv-olegen
-    #         # mandatory
-    #         # objectId: ""
-    #       providerConfigRef:
-    #         name: olegen-lab            
-    #   patches:
-    #   # grab azure.tenantId
-    #   - type: FromCompositeFieldPath
-    #     fromFieldPath: "status.azure.tenantId"
-    #     toFieldPath: spec.forProvider.tenantId
-    #   # grab objectId
-    #   - type: FromCompositeFieldPath
-    #     fromFieldPath: status.kubeletObjectId
-    #     toFieldPath: spec.forProvider.objectId      
-    #   # combine from composite aks.name
-    #   - type: CombineFromComposite
-    #     combine:
-    #       variables:
-    #         - fromFieldPath: "spec.name"
-    #       strategy: string
-    #       string:
-    #         fmt: "sap-dcp-keyvault-%s-accesspolicy"
-    #     toFieldPath: "metadata.name"
 
     # - name: role-assignment-acr
     #   base:
