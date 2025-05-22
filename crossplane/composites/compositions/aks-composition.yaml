@@ -16,13 +16,10 @@ spec:
             location: westeurope
             automaticChannelUpgrade: ''
             azureActiveDirectoryRoleBasedAccessControl:
-              - adminGroupObjectIds:
-                  - 48cf324c-e418-4dc6-b5f3-4f0fa1141f81            
+                adminGroupObjectIds:
+                  - "48cf324c-e418-4dc6-b5f3-4f0fa1141f81"         
                 azureRbacEnabled: false
-                # clientAppId: b91c533c-1e35-4683-afb7-1f9538d67232
                 managed: true
-                # serverAppId: ''
-                # tenantId: 42f7676c-f455-423c-82f6-dc2d99791af7
             defaultNodePool:
               name: pool
               upgradeSettings:
