@@ -16,6 +16,8 @@ spec:
             location: westeurope
             automaticChannelUpgrade: ''
             azureActiveDirectoryRoleBasedAccessControl:
+            - adminGroupObjectIds:
+                - 48cf324c-e418-4dc6-b5f3-4f0fa1141f81            
               azureRbacEnabled: false
               # clientAppId: b91c533c-1e35-4683-afb7-1f9538d67232
               managed: true
@@ -70,6 +72,7 @@ spec:
             privateClusterEnabled: false
             privateClusterPublicFqdnEnabled: false
             roleBasedAccessControlEnabled: true
+            # 48cf324c-e418-4dc6-b5f3-4f0fa1141f81 - gitops-example-admins azure group
             runCommandEnabled: true
             skuTier: Free
             supportPlan: KubernetesOfficial
