@@ -781,4 +781,118 @@ spec:
       # zoneName
       - type: FromCompositeFieldPath
         fromFieldPath: "spec.dnsName"
-        toFieldPath: "spec.forProvider.zoneName"      
+        toFieldPath: "spec.forProvider.zoneName"
+
+    # cert-manager issuer
+    - name: cm-issuer-prod
+      base:
+        apiVersion: kubernetes.crossplane.io/v1alpha2
+        kind: Object
+        metadata:
+          name: cm-issuer-prod
+          labels:
+            cluster-name: ""
+        spec:  
+          forProvider:
+            manifest:        
+              apiVersion: cert-manager.io/v1
+              kind: ClusterIssuer
+              metadata:
+                name: letsencrypt-prod
+                labels:
+                  controlled-by: "crossplane"
+              spec:
+                acme:
+                  email: "oleg.satalkin@gmail.com"
+                  server: "https://acme-v02.api.letsencrypt.org/directory"
+                  privateKeySecretRef:
+                    name: letsencrypt-staging
+                  solvers:
+                    - dns01:
+                        azureDNS:
+                            managedIdentity:
+                              clientID: ""
+                            subscriptionID: 1627ebbb-525b-4eea-8684-52d7545cfef9
+                            resourceGroupName: rg_learn
+                            hostedZoneName: "olegen.fun"
+                            environment: AzurePublicCloud
+          providerConfigRef:
+            name: "controlcluster-provider"
+      patches:
+      # grab clientId and tenantId from composite
+      - type: FromCompositeFieldPath
+        fromFieldPath: "status.kubeletClientId"
+        toFieldPath: "spec.forProvider.manifest.spec.acme.solvers[0].dns01.azureDNS.managedIdentity.clientID"
+      - type: FromCompositeFieldPath
+        fromFieldPath: "spec.dnsName"
+        toFieldPath: "spec.forProvider.manifest.spec.acme.solvers[0].dns01.azureDNS.hostedZoneName"
+      # grab provider
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "spec.name"
+          strategy: string
+          string:
+            fmt: "%s-provider-config"
+        toFieldPath: "spec.providerConfigRef.name"
+      # grab label
+      - type: FromCompositeFieldPath
+        fromFieldPath: "spec.name"
+        toFieldPath: "metadata.labels['cluster-name']"
+
+    # cert-manager issuer
+    - name: cm-issuer-staging
+      base:
+        apiVersion: kubernetes.crossplane.io/v1alpha2
+        kind: Object
+        metadata:
+          name: cm-issuer-staging
+          labels:
+            cluster-name: ""
+        spec:  
+          forProvider:
+            manifest:        
+              apiVersion: cert-manager.io/v1
+              kind: ClusterIssuer
+              metadata:
+                name: letsencrypt-staging
+                labels:
+                  controlled-by: "crossplane"
+              spec:
+                acme:
+                  email: "oleg.satalkin@gmail.com"
+                  server: "https://acme-staging-v02.api.letsencrypt.org/directory"
+                  privateKeySecretRef:
+                    name: letsencrypt-staging
+                  solvers:
+                    - dns01:
+                        azureDNS:
+                            managedIdentity:
+                              clientID: ""
+                            subscriptionID: 1627ebbb-525b-4eea-8684-52d7545cfef9
+                            resourceGroupName: rg_learn
+                            hostedZoneName: "olegen.fun"
+                            environment: AzurePublicCloud
+          providerConfigRef:
+            name: "controlcluster-provider"
+      patches:
+      # grab clientId and tenantId from composite
+      - type: FromCompositeFieldPath
+        fromFieldPath: "status.kubeletClientId"
+        toFieldPath: "spec.forProvider.manifest.spec.acme.solvers[0].dns01.azureDNS.managedIdentity.clientID"
+      - type: FromCompositeFieldPath
+        fromFieldPath: "spec.dnsName"
+        toFieldPath: "spec.forProvider.manifest.spec.acme.solvers[0].dns01.azureDNS.hostedZoneName"
+      # grab provider
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "spec.name"
+          strategy: string
+          string:
+            fmt: "%s-provider-config"
+        toFieldPath: "spec.providerConfigRef.name"
+      # grab label
+      - type: FromCompositeFieldPath
+        fromFieldPath: "spec.name"
+        toFieldPath: "metadata.labels['cluster-name']"
