@@ -335,6 +335,101 @@ spec:
     #     fromFieldPath: status.kubeletObjectId
     #     toFieldPath: spec.forProvider.principalId
 
+    # add Key Vault Administrator role to the aks identity
+    - name: role-assignment-kv
+      base:
+        apiVersion: authorization.azure.upbound.io/v1beta1
+        kind: RoleAssignment
+        metadata:
+          name: ra-aks-kv
+        spec:
+          forProvider:
+            # principalId: "c0bdb2e4-93ef-4d0b-ba40-7770bff78bee"
+            # principalType: "User"
+            roleDefinitionName: "Key Vault Administrator"
+            scope: "/subscriptions/1627ebbb-525b-4eea-8684-52d7545cfef9/resourceGroups/rg_learn/providers/Microsoft.KeyVault/vaults/kv-olegen"
+          providerConfigRef:
+            name: olegen-lab
+      patches:
+      # grab managedIdentityId
+      - type: FromCompositeFieldPath
+        fromFieldPath: status.kubeletObjectId
+        toFieldPath: spec.forProvider.principalId
+
+    # add Key Vault Administrator role to the aks identity
+    - name: role-assignment-dns
+      base:
+        apiVersion: authorization.azure.upbound.io/v1beta1
+        kind: RoleAssignment
+        metadata:
+          name: ra-aks-dns
+        spec:
+          forProvider:
+            # principalId: "c0bdb2e4-93ef-4d0b-ba40-7770bff78bee"
+            # principalType: "User"
+            roleDefinitionName: "DNS Zone Contributor"
+            scope: "/subscriptions/1627ebbb-525b-4eea-8684-52d7545cfef9/resourceGroups/rg_learn/providers/Microsoft.Network/dnszones/olegen.fun"
+          providerConfigRef:
+            name: olegen-lab
+      patches:
+      # grab managedIdentityId
+      - type: FromCompositeFieldPath
+        fromFieldPath: status.kubeletObjectId
+        toFieldPath: spec.forProvider.principalId
+
+    # identity related CM for eso helm chart values
+    - name: uai-cm
+      base:
+        apiVersion: kubernetes.crossplane.io/v1alpha2
+        kind: Object
+        metadata:
+          name: uai-cm
+          labels:
+            cluster-name: ""
+        spec:  
+          forProvider:
+            manifest:        
+              apiVersion: v1
+              kind: ConfigMap
+              metadata:
+                name: external-secrets-connection-data
+                namespace: external-secrets
+                labels:
+                  controlled-by: "crossplane"
+              data:
+                values.yaml: |
+                  ""
+          providerConfigRef:
+            name: "controlcluster-provider"
+      patches:
+      # grab clientId and tenantId from composite
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "status.kubeletObjectId"
+            # - fromFieldPath: "azure.tenantId"
+          strategy: string
+          string:
+            fmt: |
+              serviceAccount:
+                annotations:
+                  azure.workload.identity/client-id: "%s"
+                  azure.workload.identity/tenant-id: "bd60af36-5e42-4c11-ab8a-55400b1491fe"
+        toFieldPath: "spec.forProvider.manifest.data[values.yaml]"
+      # grab provider
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "spec.name"
+          strategy: string
+          string:
+            fmt: "%s-provider-config"
+        toFieldPath: "spec.providerConfigRef.name"
+      # grab label
+      - type: FromCompositeFieldPath
+        fromFieldPath: "spec.name"
+        toFieldPath: "metadata.labels['cluster-name']"
+
     # aks kubeconfig secret for new cluster
     - name: aks-secret
       base:
