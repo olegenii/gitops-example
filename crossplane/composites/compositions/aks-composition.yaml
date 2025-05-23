@@ -759,6 +759,14 @@ spec:
             - fromFieldPath: "spec.dnsName"
           strategy: string
           string:
+            fmt: "*.gitops.%s"
+        toFieldPath: "metadata.name"      
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "spec.dnsName"
+          strategy: string
+          string:
             fmt: "gitops.%s"
         toFieldPath: "spec.forProvider.record"
       - type: CombineFromComposite
