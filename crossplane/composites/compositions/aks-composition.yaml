@@ -460,7 +460,7 @@ spec:
             fmt: "%s-fedcred"
         toFieldPath: "metadata.name"
       - type: FromCompositeFieldPath
-        fromFieldPath: "status.oidcIssuer"
+        fromFieldPath: "status.oidcIssuerUrl"
         toFieldPath: "spec.forProvider.issuer"
     # add fed cred for cert-manager
     - name: fedCred-cert-manager
@@ -488,7 +488,7 @@ spec:
             fmt: "%s-fedcred"
         toFieldPath: "metadata.name"
       - type: FromCompositeFieldPath
-        fromFieldPath: "status.oidcIssuer"
+        fromFieldPath: "status.oidcIssuerUrl"
         toFieldPath: "spec.forProvider.issuer"
 
     # aks kubeconfig secret for new cluster
