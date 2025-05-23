@@ -3,4 +3,4 @@
   value:
     kind: ConfigMap
     name: ingress-nginx-connection-data
-    optional: true
+    # optional: true
