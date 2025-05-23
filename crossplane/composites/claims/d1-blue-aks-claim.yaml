@@ -9,6 +9,7 @@ spec:
   name: d1-blue
   rgName: gitops-example
   kubernetesVersion: 1.31.2
+  dnsName: olegen.fun
   nodePool:
     nodeCount: 2
     maxPods: 200

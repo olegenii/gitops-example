@@ -25,6 +25,8 @@ spec:
                 type: string
               rgName:
                 type: string
+              dnsName:
+                type: string                
               kubernetesVersion:
                 type: string
               nodePool:
