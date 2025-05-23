@@ -684,9 +684,10 @@ spec:
             fmt: |
               controller:
                 service:
-                  service.beta.kubernetes.io/azure-load-balancer-resource-group: %s-nodepool
-                  service.beta.kubernetes.io/azure-pip-name: %s-pip
-                  service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz                  
+                  annotations:
+                    service.beta.kubernetes.io/azure-load-balancer-resource-group: %s-nodepool
+                    service.beta.kubernetes.io/azure-pip-name: %s-pip
+                    service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz                  
         toFieldPath: "spec.forProvider.manifest.data[values.yaml]"
       # grab provider
       - type: CombineFromComposite
