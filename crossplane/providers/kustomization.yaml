@@ -6,5 +6,6 @@ resources:
   - azure-keyvault.yaml
   - azure-network.yaml
   - azure-authorization.yaml
+  - azure-managedidentity.yaml
   - kubernetes.yaml
   - helm.yaml

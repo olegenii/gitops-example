@@ -160,6 +160,10 @@ spec:
       - type: ToCompositeFieldPath
         fromFieldPath: "status.atProvider.kubeletIdentity.objectId"
         toFieldPath: status.kubeletObjectId         
+      # Update kubeletClientId in status
+      - type: ToCompositeFieldPath
+        fromFieldPath: "status.atProvider.kubeletIdentity.clientId"
+        toFieldPath: status.kubeletClientId 
 
     - name: helm-provider-config
       readinessChecks:
@@ -406,7 +410,7 @@ spec:
       - type: CombineFromComposite
         combine:
           variables:
-            - fromFieldPath: "status.kubeletObjectId"
+            - fromFieldPath: "status.kubeletClientId"
             # - fromFieldPath: "azure.tenantId"
           strategy: string
           string:
@@ -429,6 +433,63 @@ spec:
       - type: FromCompositeFieldPath
         fromFieldPath: "spec.name"
         toFieldPath: "metadata.labels['cluster-name']"
+
+    # add fed cred for aks wi
+    - name: fedCred-eso
+      base:
+        apiVersion: managedidentity.azure.upbound.io/v1beta1
+        kind: FederatedIdentityCredential
+        metadata:
+          name: fedCred-eso
+        spec:
+          forProvider:
+            audience:
+              - api://AzureADTokenExchange
+            parentIdSelector:
+              matchControllerRef: true
+            subject: "system:serviceaccount:external-secrets:external-secrets"
+          providerConfigRef:
+            name: olegen-lab
+      patches:
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "spec.name"
+          strategy: string
+          string:
+            fmt: "%s-fedcred"
+        toFieldPath: "metadata.name"
+      - type: FromCompositeFieldPath
+        fromFieldPath: "status.oidcIssuer"
+        toFieldPath: "spec.forProvider.issuer"
+    # add fed cred for cert-manager
+    - name: fedCred-cert-manager
+      base:
+        apiVersion: managedidentity.azure.upbound.io/v1beta1
+        kind: FederatedIdentityCredential
+        metadata:
+          name: fedCred-cert-manager
+        spec:
+          forProvider:
+            audience:
+              - api://AzureADTokenExchange
+            parentIdSelector:
+              matchControllerRef: true
+            subject: "system:serviceaccount:cert-manager:cert-manager"
+          providerConfigRef:
+            name: olegen-lab              
+      patches:
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "spec.name"
+          strategy: string
+          string:
+            fmt: "%s-fedcred"
+        toFieldPath: "metadata.name"
+      - type: FromCompositeFieldPath
+        fromFieldPath: "status.oidcIssuer"
+        toFieldPath: "spec.forProvider.issuer"
 
     # aks kubeconfig secret for new cluster
     - name: aks-secret
