@@ -1,0 +1,6 @@
+- op: add
+  path: /spec/valuesFrom/1
+  value:
+    kind: ConfigMap
+    name: ingress-nginx-connection-data
+    optional: true

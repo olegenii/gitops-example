@@ -613,3 +613,91 @@ spec:
       - type: FromCompositeFieldPath
         fromFieldPath: "metadata.labels['crossplane.io/composite']"
         toFieldPath: "spec.forProvider.manifest.metadata.labels['crossplane.io/composite']"
+
+    # aks kubeconfig secret for new cluster
+    - name: pip
+      base:
+        apiVersion: network.azure.upbound.io/v1beta1
+        kind: PublicIP
+        metadata:
+          name: pip
+        spec:
+          forProvider:
+            allocationMethod: Static
+            location: West Europe
+            tags:
+              provisioner: crossplane
+            # resourceGroupName: gitops-example
+          providerConfigRef:
+            name: olegen-lab
+      patches:
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "spec.name"
+          strategy: string
+          string:
+            fmt: "%s-nodepool"
+        toFieldPath: "spec.forProvider.resourceGroupName"
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "spec.name"
+          strategy: string
+          string:
+            fmt: "%s-pip"
+        toFieldPath: "metadata.name"
+
+    # identity related CM for eso helm chart values
+    - name: ingress-nginx-cm
+      base:
+        apiVersion: kubernetes.crossplane.io/v1alpha2
+        kind: Object
+        metadata:
+          name: ingress-nginx-cm
+          labels:
+            cluster-name: ""
+        spec:  
+          forProvider:
+            manifest:        
+              apiVersion: v1
+              kind: ConfigMap
+              metadata:
+                name: ingress-nginx-connection-data
+                namespace: ingress-nginx
+                labels:
+                  controlled-by: "crossplane"
+              data:
+                values.yaml: |
+                  ""
+          providerConfigRef:
+            name: "controlcluster-provider"
+      patches:
+      # grab data from PIP
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "spec.name"
+            - fromFieldPath: "spec.name"
+          strategy: string
+          string:
+            fmt: |
+              controller:
+                service:
+                  service.beta.kubernetes.io/azure-load-balancer-resource-group: %s-nodepool
+                  service.beta.kubernetes.io/azure-pip-name: %s-pip
+                  service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz                  
+        toFieldPath: "spec.forProvider.manifest.data[values.yaml]"
+      # grab provider
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "spec.name"
+          strategy: string
+          string:
+            fmt: "%s-provider-config"
+        toFieldPath: "spec.providerConfigRef.name"
+      # grab label
+      - type: FromCompositeFieldPath
+        fromFieldPath: "spec.name"
+        toFieldPath: "metadata.labels['cluster-name']"

@@ -18,4 +18,8 @@ patches:
   - path: patches/external-secrets.yaml
     target:
       name: external-secrets
-      kind: HelmRelease 
+      kind: HelmRelease
+  - path: patches/ingress-nginx.yaml
+    target:
+      name: ingress-nginx
+      kind: HelmRelease
