@@ -625,6 +625,7 @@ spec:
           forProvider:
             allocationMethod: Static
             location: West Europe
+            sku: Basic
             tags:
               provisioner: crossplane
             # resourceGroupName: gitops-example
@@ -759,7 +760,7 @@ spec:
           strategy: string
           string:
             fmt: "gitops.%s"
-        toFieldPath: "record"      
+        toFieldPath: "spec.forProvider.record"
       - type: CombineFromComposite
         combine:
           variables:
