@@ -748,7 +748,7 @@ spec:
             zoneName: olegen.fun
             record: gitops.olegen.fun
           providerConfigRef:
-            name: olegen-labs
+            name: olegen-lab
       patches:
       # name
       - type: CombineFromComposite
@@ -757,7 +757,7 @@ spec:
             - fromFieldPath: "spec.dnsSubdomainName"
           strategy: string
           string:
-            fmt: "*.%s"
+            fmt: "asterisk.%s"
         toFieldPath: "metadata.name"
       # annotation
       - type: CombineFromComposite
