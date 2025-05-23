@@ -323,25 +323,25 @@ spec:
         fromFieldPath: status.aksPrincipalId
         toFieldPath: spec.forProvider.principalId
 
-    # - name: role-assignment-acr
-    #   base:
-    #     apiVersion: authorization.azure.upbound.io/v1beta1
-    #     kind: RoleAssignment
-    #     metadata:
-    #       name: ra-aks-acr
-    #     spec:
-    #       forProvider:
-    #         # principalId: "c0bdb2e4-93ef-4d0b-ba40-7770bff78bee"
-    #         # principalType: "User"
-    #         roleDefinitionName: "AcrPull"
-    #         scope: "/subscriptions/17b59f0c-c482-487e-aca8-b3b98880e8cb/resourceGroups/registry/providers/Microsoft.ContainerRegistry/registries/sapdcpplayground"
-    #       providerConfigRef:
-    #         name: ecommerce
-    #   patches:
-    #   # grab managedIdentityId
-    #   - type: FromCompositeFieldPath
-    #     fromFieldPath: status.kubeletObjectId
-    #     toFieldPath: spec.forProvider.principalId
+    - name: role-assignment-acr
+      base:
+        apiVersion: authorization.azure.upbound.io/v1beta1
+        kind: RoleAssignment
+        metadata:
+          name: ra-aks-acr
+        spec:
+          forProvider:
+            # principalId: "c0bdb2e4-93ef-4d0b-ba40-7770bff78bee"
+            # principalType: "User"
+            roleDefinitionName: "AcrPull"
+            scope: "/subscriptions/1627ebbb-525b-4eea-8684-52d7545cfef9/resourcegroups/rg_learn/providers/Microsoft.ContainerRegistry/registries/olegen"
+          providerConfigRef:
+            name: olegen-lab
+      patches:
+      # grab managedIdentityId
+      - type: FromCompositeFieldPath
+        fromFieldPath: status.kubeletObjectId
+        toFieldPath: spec.forProvider.principalId
 
     # add Key Vault Administrator role to the aks identity
     - name: role-assignment-kv
