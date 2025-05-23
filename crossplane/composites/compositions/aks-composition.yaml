@@ -166,8 +166,8 @@ spec:
         toFieldPath: status.kubeletClientId 
       # Update userAssignedIdentityId in status
       - type: ToCompositeFieldPath
-        fromFieldPath: "status.atProvider.userAssignedIdentityId"
-        toFieldPath: status.kubeletIdentity.userAssignedIdentityId
+        fromFieldPath: "status.atProvider.kubeletIdentity.userAssignedIdentityId"
+        toFieldPath: status.userAssignedIdentityId
 
     - name: helm-provider-config
       readinessChecks:
