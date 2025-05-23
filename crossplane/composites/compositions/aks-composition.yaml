@@ -710,7 +710,9 @@ spec:
         apiVersion: network.azure.upbound.io/v1beta1
         kind: DNSARecord
         metadata:
-          name: gitops.olegen.fun
+          name: gitops
+          annotations:
+            crossplane.io/external-name: gitops
         spec:
           forProvider:
             resourceGroupName: rg_learn
@@ -721,21 +723,14 @@ spec:
           providerConfigRef:
             name: olegen-lab
       patches:
-      - type: CombineFromComposite
-        combine:
-          variables:
-            - fromFieldPath: "spec.dnsName"
-          strategy: string
-          string:
-            fmt: "gitops.%s"
+      - type: FromCompositeFieldPath
+        fromFieldPath: "spec.dnsSubdomainName"
         toFieldPath: "metadata.name"
-      - type: CombineFromComposite
-        combine:
-          variables:
-            - fromFieldPath: "spec.dnsName"
-          strategy: string
-          string:
-            fmt: "%s"
+      - type: FromCompositeFieldPath
+        fromFieldPath: "spec.dnsSubdomainName"
+        toFieldPath: "metadata.annotations['crossplane.io/external-name']"        
+      - type: FromCompositeFieldPath
+        fromFieldPath: "spec.dnsName"
         toFieldPath: "spec.forProvider.zoneName"
 
     - name: dns-cname-record-asterisk
@@ -743,7 +738,9 @@ spec:
         apiVersion: network.azure.upbound.io/v1beta1
         kind: DNSCNAMERecord
         metadata:
-          name: "*.gitops.olegen.fun"
+          name: "*.gitops"
+          annotations:
+            crossplane.io/external-name: "*.gitops"          
         spec:
           forProvider:
             resourceGroupName: rg_learn
@@ -751,29 +748,37 @@ spec:
             zoneName: olegen.fun
             record: gitops.olegen.fun
           providerConfigRef:
-            name: olegen-lab
+            name: olegen-labs
       patches:
+      # name
       - type: CombineFromComposite
         combine:
           variables:
-            - fromFieldPath: "spec.dnsName"
+            - fromFieldPath: "spec.dnsSubdomainName"
           strategy: string
           string:
-            fmt: "*.gitops.%s"
-        toFieldPath: "metadata.name"      
+            fmt: "*.%s"
+        toFieldPath: "metadata.name"
+      # annotation
       - type: CombineFromComposite
         combine:
           variables:
+            - fromFieldPath: "spec.dnsSubdomainName"
+          strategy: string
+          string:
+            fmt: "*.%s"
+        toFieldPath: "metadata.annotations['crossplane.io/external-name']"
+      # record
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "spec.dnsSubdomainName"
             - fromFieldPath: "spec.dnsName"
           strategy: string
           string:
-            fmt: "gitops.%s"
+            fmt: "%s.%s"
         toFieldPath: "spec.forProvider.record"
-      - type: CombineFromComposite
-        combine:
-          variables:
-            - fromFieldPath: "spec.dnsName"
-          strategy: string
-          string:
-            fmt: "%s"
+      # zoneName
+      - type: FromCompositeFieldPath
+        fromFieldPath: "spec.dnsName"
         toFieldPath: "spec.forProvider.zoneName"      
