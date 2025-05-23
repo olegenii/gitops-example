@@ -86,7 +86,9 @@ spec:
               kubeletObjectId:
                 type: string
               kubeletClientId:
-                type: string                
+                type: string
+              userAssignedIdentityId:
+                type: string
               # clusterCA:
               #   type: string
               # clusterServer:

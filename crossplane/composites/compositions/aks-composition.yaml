@@ -164,6 +164,10 @@ spec:
       - type: ToCompositeFieldPath
         fromFieldPath: "status.atProvider.kubeletIdentity.clientId"
         toFieldPath: status.kubeletClientId 
+      # Update userAssignedIdentityId in status
+      - type: ToCompositeFieldPath
+        fromFieldPath: "status.atProvider.userAssignedIdentityId"
+        toFieldPath: status.userAssignedIdentityId
 
     - name: helm-provider-config
       readinessChecks:
@@ -445,8 +449,6 @@ spec:
           forProvider:
             audience:
               - api://AzureADTokenExchange
-            parentIdSelector:
-              matchControllerRef: true
             subject: "system:serviceaccount:external-secrets:external-secrets"
           providerConfigRef:
             name: olegen-lab
@@ -457,11 +459,15 @@ spec:
             - fromFieldPath: "spec.name"
           strategy: string
           string:
-            fmt: "%s-fedcred"
+            fmt: "%s-fedcred-eso"
         toFieldPath: "metadata.name"
       - type: FromCompositeFieldPath
         fromFieldPath: "status.oidcIssuerUrl"
         toFieldPath: "spec.forProvider.issuer"
+      - type: FromCompositeFieldPath
+        fromFieldPath: "status.userAssignedIdentityId"
+        toFieldPath: "spec.forProvider.parentId"
+
     # add fed cred for cert-manager
     - name: fedCred-cert-manager
       base:
@@ -473,8 +479,6 @@ spec:
           forProvider:
             audience:
               - api://AzureADTokenExchange
-            parentIdSelector:
-              matchControllerRef: true
             subject: "system:serviceaccount:cert-manager:cert-manager"
           providerConfigRef:
             name: olegen-lab              
@@ -485,11 +489,14 @@ spec:
             - fromFieldPath: "spec.name"
           strategy: string
           string:
-            fmt: "%s-fedcred"
+            fmt: "%s-fedcred-cert-manager"
         toFieldPath: "metadata.name"
       - type: FromCompositeFieldPath
         fromFieldPath: "status.oidcIssuerUrl"
         toFieldPath: "spec.forProvider.issuer"
+      - type: FromCompositeFieldPath
+        fromFieldPath: "status.userAssignedIdentityId"
+        toFieldPath: "spec.forProvider.parentId"        
 
     # aks kubeconfig secret for new cluster
     - name: aks-secret
