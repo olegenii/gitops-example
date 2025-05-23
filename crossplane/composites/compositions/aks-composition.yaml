@@ -467,6 +467,14 @@ spec:
       - type: FromCompositeFieldPath
         fromFieldPath: "status.userAssignedIdentityId"
         toFieldPath: "spec.forProvider.parentId"
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "spec.name"
+          strategy: string
+          string:
+            fmt: "%s-nodepool"
+        toFieldPath: "spec.forProvider.resourceGroupName"        
 
     # add fed cred for cert-manager
     - name: fedCred-cert-manager
@@ -496,7 +504,15 @@ spec:
         toFieldPath: "spec.forProvider.issuer"
       - type: FromCompositeFieldPath
         fromFieldPath: "status.userAssignedIdentityId"
-        toFieldPath: "spec.forProvider.parentId"        
+        toFieldPath: "spec.forProvider.parentId"
+      - type: CombineFromComposite
+        combine:
+          variables:
+            - fromFieldPath: "spec.name"
+          strategy: string
+          string:
+            fmt: "%s-nodepool"
+        toFieldPath: "spec.forProvider.resourceGroupName"
 
     # aks kubeconfig secret for new cluster
     - name: aks-secret
