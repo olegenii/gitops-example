@@ -16,10 +16,16 @@ metadata:
   name: kagent
   namespace: kagent
 spec:
-  chartRef:
-    kind: OCIRepository
-    name: kagent
-    namespace: kagent
+  chart:
+    spec:
+      chart: kagent
+      sourceRef:
+        kind: HelmRepository
+        name: kagent
+  # chartRef:
+  #   kind: OCIRepository
+  #   name: kagent
+  #   namespace: kagent
   dependsOn:
     - name: kagent-crds
       namespace: kagent

@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 1h0m0s
   ref:
-    tag: 0.3.10
+    tag: latest
   url: oci://ghcr.io/kagent-dev/kagent/helm/kagent
 ---
 apiVersion: source.toolkit.fluxcd.io/v1beta2
@@ -17,5 +17,25 @@ metadata:
 spec:
   interval: 1h0m0s
   ref:
-    tag: 0.3.10
+    tag: latest
   url: oci://ghcr.io/kagent-dev/kagent/helm/kagent-crds
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: kagent
+  namespace: kagent
+spec:
+  interval: 1h0m0s
+  type: oci
+  url: oci://ghcr.io/kagent-dev/kagent
+# ---
+# apiVersion: source.toolkit.fluxcd.io/v1
+# kind: HelmRepository
+# metadata:
+#   name: kagent-crds
+#   namespace: kagent
+# spec:
+#   interval: 1h0m0s
+#   type: oci
+#   url: oci://ghcr.io/kagent-dev/kagent/helm/kagent-crds
