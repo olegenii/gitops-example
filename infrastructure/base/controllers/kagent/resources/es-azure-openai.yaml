@@ -1,0 +1,17 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: es-azure-openai
+  namespace: kagent
+spec:
+  dataFrom:
+  - extract:
+      key: azure-openai-gpt-api-keys
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: kv-olegen
+  target:
+    creationPolicy: Owner
+    deletionPolicy: Retain
+    name: kagent-azure-openai

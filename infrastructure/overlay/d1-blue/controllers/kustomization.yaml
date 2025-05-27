@@ -4,6 +4,8 @@ resources:
   - ../../../base/controllers/eso
   - ../../../base/controllers/cert-manager
   - ../../../base/controllers/ingress-nginx
+  - ../../../base/controllers/kagent
+  - kagent-ui-ingress.yaml
 
 configMapGenerator:
   - name: external-secrets-values-cm
