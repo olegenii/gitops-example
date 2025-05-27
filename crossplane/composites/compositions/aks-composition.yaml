@@ -710,14 +710,14 @@ spec:
         apiVersion: network.azure.upbound.io/v1beta1
         kind: DNSARecord
         metadata:
-          name: gitops
+          name: ""
           annotations:
-            crossplane.io/external-name: gitops
+            crossplane.io/external-name: ""
         spec:
           forProvider:
             resourceGroupName: rg_learn
             ttl: 300
-            zoneName: olegen.fun
+            zoneName: ""
             targetResourceIdSelector:
               matchControllerRef: true
           providerConfigRef:
@@ -738,15 +738,15 @@ spec:
         apiVersion: network.azure.upbound.io/v1beta1
         kind: DNSCNAMERecord
         metadata:
-          name: "*.gitops"
+          name: ""
           annotations:
-            crossplane.io/external-name: "*.gitops"          
+            crossplane.io/external-name: ""          
         spec:
           forProvider:
             resourceGroupName: rg_learn
             ttl: 300
-            zoneName: olegen.fun
-            record: gitops.olegen.fun
+            zoneName: ""
+            record: ""
           providerConfigRef:
             name: olegen-lab
       patches:
