@@ -1,5 +1,7 @@
-providers:
-  default: azureOpenAI
+istio-agent:
+  enabled: false
+# providers:
+#   default: azureOpenAI
   # azureOpenAI:
   #   # apiKey: ""
   #   apiKeySecretKey: AZUREOPENAI_API_KEY
