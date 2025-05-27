@@ -4,3 +4,5 @@ resources:
   - ../../base/flux-ui
   - flux-ui-ingress.yaml
   - ../../base/kagent
+  - kagent-ui-ingress.yaml
+  
