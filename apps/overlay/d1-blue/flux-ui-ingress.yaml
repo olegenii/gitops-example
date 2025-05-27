@@ -8,11 +8,11 @@ metadata:
 spec:
   tls:
   - hosts:
-    - "*.gitops.olegen.fun"
-    - "gitops.olegen.fun"
+    - "*.d1.gitops.olegen.fun"
+    - "d1.gitops.olegen.fun"
     secretName: le-cert-wildcard
   rules:
-  - host: flux.gitops.olegen.fun
+  - host: flux.d1.gitops.olegen.fun
     http:
       paths:
       - path: /
