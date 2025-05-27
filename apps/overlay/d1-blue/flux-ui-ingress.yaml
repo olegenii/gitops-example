@@ -4,13 +4,13 @@ metadata:
   name: flux-ingress
   namespace: flux-system
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   tls:
   - hosts:
     - "*.d1.gitops.olegen.fun"
     - "d1.gitops.olegen.fun"
-    secretName: le-cert-wildcard
+    secretName: letsencrypt-prod
   rules:
   - host: flux.d1.gitops.olegen.fun
     http:
