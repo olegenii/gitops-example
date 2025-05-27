@@ -18,3 +18,24 @@ spec:
     creationPolicy: Owner
     deletionPolicy: Retain
     name: kagent-azure-openai
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: es-azure-openai-04-mini
+  namespace: kagent
+spec:
+  dataFrom:
+    - extract:
+        conversionStrategy: Default
+        decodingStrategy: None
+        key: azure-openai-gpt-o4-mini
+        metadataPolicy: None
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: kv-olegen
+  target:
+    creationPolicy: Owner
+    deletionPolicy: Retain
+    name: kagent-azure-openai-o4-mini
