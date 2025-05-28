@@ -4,7 +4,7 @@ resources:
   - resources/ns.yaml
   - resources/repo.yaml
   - resources/release.yaml
-  - resources/es-azure-openai.yaml
+  # - resources/es-azure-openai.yaml
   # - resources/ingress.yaml
   # - resources/oidc-crb.yaml
 configMapGenerator:
