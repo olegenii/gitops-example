@@ -13,7 +13,7 @@ spec:
   refreshInterval: 1h
   secretStoreRef:
     kind: ClusterSecretStore
-    name: es-azure-store
+    name: kv-olegen
   target:
     creationPolicy: Owner
     deletionPolicy: Retain
