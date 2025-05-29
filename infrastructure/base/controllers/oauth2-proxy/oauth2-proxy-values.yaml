@@ -6,7 +6,6 @@ config:
     cookie_secure = true
     cookie_httponly = true
     cookie_samesite = "lax"
-    cookie_domain = "d1.gitops.olegen.fun"  # Optional
     github_org = "gitops-example-olegenii"  # Optional, to restrict to members
     # github_team = "<your-team>"  # Optional, to restrict to a specific team
     redirect_url = "https://auth.d1.gitops.olegen.fun/oauth2/callback"
