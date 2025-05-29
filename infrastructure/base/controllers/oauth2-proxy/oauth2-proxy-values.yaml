@@ -1,0 +1,31 @@
+config:
+  existingSecret: oauth2-proxy-github-oidc
+  configFile: |-
+    provider = "github"
+    email_domains = [ "*" ]  # Or limit to your org, e.g., ["yourdomain.com"]
+    cookie_secure = true
+    cookie_httponly = true
+    cookie_samesite = "lax"
+    cookie_domain = "d1.gitops.olegen.fun"  # Optional
+    github_org = "gitops-example-olegenii"  # Optional, to restrict to members
+    # github_team = "<your-team>"  # Optional, to restrict to a specific team
+    redirect_url = "https://auth.d1.gitops.olegen.fun/oauth2/callback"
+    scope = "user:email"
+    whitelist_domains = [".d1.gitops.olegen.fun"]
+    upstreams = [ "https://kagent.d1.gitops.olegen.fun" ]
+ingress:
+  enabled: true
+  path: /
+  hosts:
+    - auth.d1.gitops.olegen.fun
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "2000m"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "32k"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  tls:
+    - secretName: letsencrypt-prod
+      hosts:
+        - auth.d1.gitops.olegen.fun

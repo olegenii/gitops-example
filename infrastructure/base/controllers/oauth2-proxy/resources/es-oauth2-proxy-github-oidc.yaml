@@ -1,0 +1,20 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: es-oauth2-proxy-github
+  namespace: oauth2-proxy
+spec:
+  dataFrom:
+    - extract:
+        conversionStrategy: Default
+        decodingStrategy: None
+        key: oauth2-proxy-github-oidc
+        metadataPolicy: None
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: es-azure-store
+  target:
+    creationPolicy: Owner
+    deletionPolicy: Retain
+    name: oauth2-proxy-github-oidc
