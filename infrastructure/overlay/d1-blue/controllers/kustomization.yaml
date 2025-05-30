@@ -5,7 +5,7 @@ resources:
   - ../../../base/controllers/cert-manager
   - ../../../base/controllers/ingress-nginx
   - ../../../base/controllers/kagent
-  - ../../../base/controllers/oauth2-proxy
+  # - ../../../base/controllers/oauth2-proxy
   - kagent-ui-ingress.yaml
 
 configMapGenerator:
