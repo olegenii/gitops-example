@@ -9,7 +9,7 @@ config:
     # github_org = "gitops-example-olegenii"  # Optional, to restrict to members
     # github_team = "<your-team>"  # Optional, to restrict to a specific team
     redirect_url = "https://kagent.d1.gitops.olegen.fun/oauth2/callback"
-    scope = "user:email"
+    scope = "user:email read:org"
     # whitelist_domains = ["*.d1.gitops.olegen.fun"]
     # upstreams = [ "https://kagent.d1.gitops.olegen.fun" ]
     upstreams = [ "file:///dev/null" ]
