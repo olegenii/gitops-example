@@ -7,7 +7,7 @@ spec:
   config:
     stdio:
       args:
-        - '@upstash/context7-mcp@latest'
         - '-y'
+        - '@upstash/context7-mcp@latest'
       command: npx
   description: 'context7 MCP with documentation'

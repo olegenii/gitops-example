@@ -1,5 +1,5 @@
 istio-agent:
-  enabled: false
+  enabled: true
 # providers:
 #   default: azureOpenAI
   # azureOpenAI:
