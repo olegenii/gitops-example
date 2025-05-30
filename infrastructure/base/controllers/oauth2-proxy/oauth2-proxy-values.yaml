@@ -10,8 +10,9 @@ config:
     # github_team = "<your-team>"  # Optional, to restrict to a specific team
     redirect_url = "https://auth.d1.gitops.olegen.fun/oauth2/callback"
     scope = "user:email"
-    whitelist_domains = ["*.d1.gitops.olegen.fun"]
-    upstreams = [ "https://kagent.d1.gitops.olegen.fun" ]
+    # whitelist_domains = ["*.d1.gitops.olegen.fun"]
+    # upstreams = [ "https://kagent.d1.gitops.olegen.fun" ]
+    upstreams = [ "file:///dev/null" ]
 ingress:
   enabled: true
   path: /
@@ -20,11 +21,12 @@ ingress:
   className: nginx
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/proxy-body-size: "2000m"
-    nginx.ingress.kubernetes.io/proxy-buffer-size: "32k"
+    # nginx.ingress.kubernetes.io/proxy-body-size: "2000m"
+    # nginx.ingress.kubernetes.io/proxy-buffer-size: "32k"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
   tls:
     - secretName: letsencrypt-prod
       hosts:
         - auth.d1.gitops.olegen.fun
+        

@@ -5,6 +5,9 @@ metadata:
   namespace: kagent
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    # nginx.ingress.kubernetes.io/auth-response-headers: x-auth-request-user, x-auth-request-email, x-auth-request-access-token
+    nginx.ingress.kubernetes.io/auth-signin: https://auth.d1.gitops.olegen.fun/oauth2/start?rd=$escaped_request_uri
+    nginx.ingress.kubernetes.io/auth-url: https://auth.d1.gitops.olegen.fun/oauth2/auth
 spec:
   tls:
   - hosts:
