@@ -4,8 +4,6 @@ config:
     provider = "github"
     email_domains = [ "*" ]  # Or limit to your org, e.g., ["yourdomain.com"]
     cookie_secure = true
-    # cookie_httponly = true
-    # cookie_samesite = "lax"
     github_org = "gitops-example-olegenii"  # Optional, to restrict to members
     # github_team = "<your-team>"  # Optional, to restrict to a specific team
     redirect_url = "https://kagent.d1.gitops.olegen.fun/oauth2/callback"
