@@ -1,0 +1,33 @@
+apiVersion: kagent.dev/v1alpha1
+kind: Agent
+metadata:
+  name: k8s-a2a-agent
+  namespace: kagent
+spec:
+  description: An example A2A agent that knows how to use Kubernetes tools.
+  modelConfig: default-model-config
+  systemMessage: |-
+      You are an expert Kubernetes agent that uses tools to help users.
+  tools:
+  - builtin:
+      name: kagent.tools.k8s.GetResources
+    type: Builtin
+  a2aConfig:
+    skills:
+    - id: get-resources-skill
+      name: Get Resources
+      description: Get resources in the Kubernetes cluster
+      inputModes:
+      - text
+      outputModes:
+      - text
+      tags:
+      - k8s
+      examples:
+      - "Get all resources in the Kubernetes cluster"
+      - "Get the pods in the default namespace"
+      - "Get the services in the istio-system namespace"
+      - "Get the deployments in the istio-system namespace"
+      - "Get the jobs in the istio-system namespace"
+      - "Get the cronjobs in the istio-system namespace"
+      - "Get the statefulsets in the istio-system namespace"

@@ -4,3 +4,4 @@ resources:
   - model-4o-mini.yaml
   - model-o4-mini.yaml
   - tools-context7.yaml
+  - agent.yaml
