@@ -4,3 +4,4 @@ resources:
   - crawl4ai-rag.yaml
   - es-crawl4ai-rag.yaml
   - mcp-config.yaml
+  - tools-crawl4ai-rag.yaml

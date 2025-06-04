@@ -1,0 +1,11 @@
+apiVersion: kagent.dev/v1alpha1
+kind: ToolServer
+metadata:
+  name: crawl4ai-rag
+  namespace: kagent
+spec:
+  config:
+    sse:
+      timeout: 5s
+      url: http://crawl4ai-rag:8051/sse
+  description: ''
