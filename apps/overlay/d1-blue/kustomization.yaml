@@ -4,3 +4,4 @@ resources:
   - ../../base/flux-ui
   - flux-ui-ingress.yaml
   - ../../base/oauth2-proxy
+  - ./mcp/crawl4ai-rag
