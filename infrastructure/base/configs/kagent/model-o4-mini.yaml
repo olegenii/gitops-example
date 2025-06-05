@@ -10,5 +10,5 @@ spec:
     apiVersion: 2024-12-01-preview
     azureDeployment: gpt-o4-mini
     azureEndpoint: https://olegen.openai.azure.com/
-  model: gpt-o4-mini
+  model: o4-mini
   provider: AzureOpenAI
