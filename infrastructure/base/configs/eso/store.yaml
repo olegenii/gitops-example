@@ -15,9 +15,9 @@ spec:
         # the azure service principal credentials
         clientId:
           name: azure-olegen-lab
-          key: creds
-          namespace: crossplane-system
+          key: clientId
+          namespace: external-secrets
         clientSecret:
           name: azure-olegen-lab
-          key: creds
-          namespace: crossplane-system
+          key: clientSecret
+          namespace: external-secrets
