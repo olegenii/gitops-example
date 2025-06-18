@@ -238,72 +238,72 @@ spec:
     - mcpServer:
         toolNames:
           - apply_kubernetes_manifest
-        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+        toolServer: flux-operator-mcp
       type: McpServer
     - mcpServer:
         toolNames:
           - delete_kubernetes_resource
-        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+        toolServer: flux-operator-mcp
       type: McpServer
     - mcpServer:
         toolNames:
           - get_flux_instance
-        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+        toolServer: flux-operator-mcp
       type: McpServer
     - mcpServer:
         toolNames:
           - get_kubernetes_api_versions
-        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+        toolServer: flux-operator-mcp
       type: McpServer
     - mcpServer:
         toolNames:
           - get_kubernetes_logs
-        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+        toolServer: flux-operator-mcp
       type: McpServer
     - mcpServer:
         toolNames:
           - get_kubernetes_metrics
-        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+        toolServer: flux-operator-mcp
       type: McpServer
     - mcpServer:
         toolNames:
           - get_kubernetes_resources
-        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+        toolServer: flux-operator-mcp
       type: McpServer
     - mcpServer:
         toolNames:
           - reconcile_flux_helmrelease
-        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+        toolServer: flux-operator-mcp
       type: McpServer
     - mcpServer:
         toolNames:
           - reconcile_flux_kustomization
-        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+        toolServer: flux-operator-mcp
       type: McpServer
     - mcpServer:
         toolNames:
           - reconcile_flux_resourceset
-        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+        toolServer: flux-operator-mcp
       type: McpServer
     - mcpServer:
         toolNames:
           - reconcile_flux_source
-        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+        toolServer: flux-operator-mcp
       type: McpServer
     - mcpServer:
         toolNames:
           - resume_flux_reconciliation
-        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+        toolServer: flux-operator-mcp
       type: McpServer
     - mcpServer:
         toolNames:
           - search_flux_docs
-        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+        toolServer: flux-operator-mcp
       type: McpServer
     - mcpServer:
         toolNames:
           - suspend_flux_reconciliation
-        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+        toolServer: flux-operator-mcp
       type: McpServer
   a2aConfig:
     skills:
