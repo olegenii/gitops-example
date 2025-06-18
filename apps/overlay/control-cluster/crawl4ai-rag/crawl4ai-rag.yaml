@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crawl4ai-rag
+  namespace: kagent
+  labels:
+    app: crawl4ai-rag
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crawl4ai-rag
+  template:
+    metadata:
+      labels:
+        app: crawl4ai-rag
+    spec:
+      containers:
+      - name: crawl4ai-rag
+        image: olegen.azurecr.io/mcp/crawl4ai-rag:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8051
+        env:
+        - name: AZURE_OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: mcp-secrets
+              key: AZURE_OPENAI_API_KEY
+        - name: SUPABASE_SERVICE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: mcp-secrets
+              key: SUPABASE_SERVICE_KEY
+        - name: SUPABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: mcp-config
+              key: SUPABASE_URL        
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: mcp-config
+              key: PORT
+        - name: HOST
+          valueFrom:
+            configMapKeyRef:
+              name: mcp-config
+              key: HOST
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: crawl4ai-rag
+  namespace: kagent
+spec:
+  selector:
+    app: crawl4ai-rag
+  ports:
+  - port: 8051
+    targetPort: 8051
+  type: ClusterIP

@@ -1,0 +1,74 @@
+apiVersion: fluxcd.controlplane.io/v1
+kind: ResourceSet
+metadata:
+  name: flux-operator-mcp
+  namespace: flux-system
+spec:
+  inputs:
+    - version: latest
+      readonly: false
+      accessFrom: kagent
+  resources:
+    - kind: OCIRepository
+      apiVersion: source.toolkit.fluxcd.io/v1beta2
+      metadata:
+        name: flux-operator-manifests
+        namespace: flux-system
+      spec:
+        interval: 120m
+        url: oci://ghcr.io/controlplaneio-fluxcd/flux-operator-manifests
+        ref:
+          tag: << inputs.version >>
+    - kind: Kustomization
+      apiVersion: kustomize.toolkit.fluxcd.io/v1
+      metadata:
+        name: flux-operator-mcp
+        namespace: flux-system
+      spec:
+        serviceAccountName: flux-operator
+        interval: 60m
+        wait: true
+        timeout: 5m
+        retryInterval: 5m
+        prune: true
+        sourceRef:
+          kind: OCIRepository
+          name: flux-operator-manifests
+        path: ./flux-operator-mcp
+        patches:
+          - patch: |
+              - op: add
+                path: /spec/template/spec/containers/0/args/-
+                value: --read-only=<< inputs.readonly >>
+            target:
+              kind: Deployment
+    - kind: NetworkPolicy
+      apiVersion: networking.k8s.io/v1
+      metadata:
+        name: flux-operator-mcp
+        namespace: flux-system
+      spec:
+        policyTypes:
+          - Ingress
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: flux-operator-mcp
+        ingress:
+          - from:
+              - namespaceSelector:
+                  matchLabels:
+                    kubernetes.io/metadata.name: << inputs.accessFrom >>
+            ports:
+              - protocol: TCP
+                port: 9090
+    - kind: ToolServer
+      apiVersion: kagent.dev/v1alpha1
+      metadata:
+        name: flux-operator-mcp
+        namespace: kagent
+      spec:
+        config:
+          sse:
+            timeout: 5s
+            url: http://flux-operator-mcp.flux-system:9090/sse
+        description: ''      

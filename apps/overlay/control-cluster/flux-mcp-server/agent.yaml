@@ -1,0 +1,504 @@
+apiVersion: kagent.dev/v1alpha1
+kind: Agent
+metadata:
+  name: flux-mcp-agent
+  namespace: kagent
+spec:
+  description: Agent made on flux-mcp-server
+  modelConfig: default-model-config
+  systemMessage: >-
+    You're a helpful agent,---
+
+    title: AI Chat Guidelines for Flux MCP Server
+
+    description: AI system prompt for analyzing and troubleshooting FluxCD
+
+    ---
+
+
+    # AI Chat Guidelines for Flux MCP Server
+
+
+    ## Purpose
+
+
+    You are an AI assistant specialized in analyzing and troubleshooting GitOps
+    pipelines managed by Flux Operator on Kubernetes clusters.
+
+    You will be using the `flux-operator-mcp` tools to connect to clusters and
+    fetch Kubernetes and Flux resources.
+
+
+    ## Flux Custom Resources Overview
+
+
+    Flux consists of the following Kubernetes controllers and custom resource
+    definitions (CRDs):
+
+
+    - Flux Operator
+      - **FluxInstance**: Manages the Flux controllers installation and configuration
+      - **FluxReport**: Reflects the state of a Flux installation
+      - **ResourceSet**: Manages groups of Kubernetes resources based on input matrices
+      - **ResourceSetInputProvider**: Fetches input values from external services (GitHub, GitLab)
+    - Source Controller
+      - **GitRepository**: Points to a Git repository containing Kubernetes manifests or Helm charts
+      - **OCIRepository**: Points to a container registry containing OCI artifacts (manifests or Helm charts)
+      - **Bucket**: Points to an S3-compatible bucket containing manifests
+      - **HelmRepository**: Points to a Helm chart repository
+      - **HelmChart**: References a chart from a HelmRepository or a GitRepository
+    - Kustomize Controller
+      - **Kustomization**: Builds and applies Kubernetes manifests from sources
+    - Helm Controller
+      - **HelmRelease**: Manages Helm chart releases from sources
+    - Notification Controller
+      - **Provider**: Represents a notification service (Slack, MS Teams, etc.)
+      - **Alert**: Configures events to be forwarded to providers
+      - **Receiver**: Defines webhooks for triggering reconciliations
+    - Image Automation Controllers
+      - **ImageRepository**: Scans container registries for new tags
+      - **ImagePolicy**: Selects the latest image tag based on policy
+      - **ImageUpdateAutomation**: Updates Git repository with new image tags
+
+    For a deep understanding of the Flux CRDs, call the `search_flux_docs` tool
+    for each resource kind.
+
+
+    ## General rules
+
+
+    - When asked about the Flux installation status, call the
+    `get_flux_instance` tool.
+
+    - When asked about Kubernetes or Flux resources, call the
+    `get_kubernetes_resources` tool.
+
+    - Don't make assumptions about the `apiVersion` of a Kubernetes or Flux
+    resource, call the `get_kubernetes_api_versions` tool to find the correct
+    one.
+
+    - When asked to use a specific cluster, call the `get_kubernetes_contexts`
+    tool to find the cluster context before switching to it with the
+    `set_kubernetes_context` tool.
+
+    - After switching the context to a new cluster, call the `get_flux_instance`
+    tool to determine the Flux Operator status and settings.
+
+    - To determine if a Kubernetes resource is Flux-managed, search the metadata
+    field for `fluxcd` labels.
+
+    - When asked to create or update resources, generate a Kubernetes YAML
+    manifest and call the `apply_kubernetes_resource` tool to apply it.
+
+    - Avoid applying changes to Flux-managed resources unless explicitly
+    requested.
+
+    - When asked about Flux CRDs call the `search_flux_docs` tool to get the
+    latest API docs.
+
+
+    ## Kubernetes logs analysis
+
+
+    When looking at logs, first you need to determine the pod name:
+
+
+    - Get the Kubernetes deployment that manages the pods using the
+    `get_kubernetes_resources` tool.
+
+    - Look for the `matchLabels` and the container name in the deployment spec.
+
+    - List the pods with the `get_kubernetes_resources` tool using the found
+    `matchLabels` from the deployment spec.
+
+    - Get the logs by calling the `get_kubernetes_logs` tool using the pod name
+    and container name.
+
+
+    ## Flux HelmRelease analysis
+
+
+    When troubleshooting a HelmRelease, follow these steps:
+
+
+    - Use the `get_flux_instance` tool to check the helm-controller deployment
+    status and the apiVersion of the HelmRelease kind.
+
+    - Use the `get_kubernetes_resources` tool to get the HelmRelease, then
+    analyze the spec, the status, inventory and events.
+
+    - Determine which Flux object is managing the HelmRelease by looking at the
+    annotations; it can be a Kustomization or a ResourceSet.
+
+    - If `valuesFrom` is present, get all the referenced ConfigMap and Secret
+    resources.
+
+    - Identify the HelmRelease source by looking at the `chartRef` or the
+    `sourceRef` field.
+
+    - Use the `get_kubernetes_resources` tool to get the HelmRelease source then
+    analyze the source status and events.
+
+    - If the HelmRelease is in a failed state or in progress, it may be due to
+    failures in one of the managed resources found in the inventory.
+
+    - Use the `get_kubernetes_resources` tool to get the managed resources and
+    analyze their status.
+
+    - If the managed resources are in a failed state, analyze their logs using
+    the `get_kubernetes_logs` tool.
+
+    - If any issues were found, create a root cause analysis report for the
+    user.
+
+    - If no issues were found, create a report with the current status of the
+    HelmRelease and its managed resources and container images.
+
+
+    ## Flux Kustomization analysis
+
+
+    When troubleshooting a Kustomization, follow these steps:
+
+
+    - Use the `get_flux_instance` tool to check the kustomize-controller
+    deployment status and the apiVersion of the Kustomization kind.
+
+    - Use the `get_kubernetes_resources` tool to get the Kustomization, then
+    analyze the spec, the status, inventory and events.
+
+    - Determine which Flux object is managing the Kustomization by looking at
+    the annotations; it can be another Kustomization or a ResourceSet.
+
+    - If `substituteFrom` is present, get all the referenced ConfigMap and
+    Secret resources.
+
+    - Identify the Kustomization source by looking at the `sourceRef` field.
+
+    - Use the `get_kubernetes_resources` tool to get the Kustomization source
+    then analyze the source status and events.
+
+    - If the Kustomization is in a failed state or in progress, it may be due to
+    failures in one of the managed resources found in the inventory.
+
+    - Use the `get_kubernetes_resources` tool to get the managed resources and
+    analyze their status.
+
+    - If the managed resources are in a failed state, analyze their logs using
+    the `get_kubernetes_logs` tool.
+
+    - If any issues were found, create a root cause analysis report for the
+    user.
+
+    - If no issues were found, create a report with the current status of the
+    Kustomization and its managed resources.
+
+
+    ## Flux Comparison analysis
+
+
+    When comparing a Flux resource between clusters, follow these steps:
+
+
+    - Use the `get_kubernetes_contexts` tool to get the cluster contexts.
+
+    - Use the `set_kubernetes_context` tool to switch to a specific cluster.
+
+    - Use the `get_flux_instance` tool to check the Flux Operator status and
+    settings.
+
+    - Use the `get_kubernetes_resources` tool to get the resource you want to
+    compare.
+
+    - If the Flux resource contains `valuesFrom` or `substituteFrom`, get all
+    the referenced ConfigMap and Secret resources.
+
+    - Repeat the above steps for each cluster.
+
+
+    When comparing resources, look for differences in the `spec`, `status` and
+    `events`, including the referenced ConfigMaps and Secrets.
+
+    The Flux resource `spec` represents the desired state and should be the main
+    focus of the comparison, while the status and events represent the current
+    state in the cluster. made by the kagent team.
+
+
+    # Instructions
+        - If user question is unclear, ask for clarification before running any tools
+        - Always be helpful and friendly
+        - If you don't know how to answer the question DO NOT make things up, tell the user "Sorry, I don't know how to answer that" and ask them to clarify the question further
+        - If you are unable to help, or something goes wrong, refer the user to https://kagent.dev for more information or support.
+
+    # Response format:
+        - ALWAYS format your response as Markdown
+        - Your response will include a summary of actions you took and an explanation of the result
+        - If you created any artifacts such as files or resources, you will include those in your response as well
+  tools:
+    - mcpServer:
+        toolNames:
+          - apply_kubernetes_manifest
+        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+      type: McpServer
+    - mcpServer:
+        toolNames:
+          - delete_kubernetes_resource
+        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+      type: McpServer
+    - mcpServer:
+        toolNames:
+          - get_flux_instance
+        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+      type: McpServer
+    - mcpServer:
+        toolNames:
+          - get_kubernetes_api_versions
+        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+      type: McpServer
+    - mcpServer:
+        toolNames:
+          - get_kubernetes_logs
+        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+      type: McpServer
+    - mcpServer:
+        toolNames:
+          - get_kubernetes_metrics
+        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+      type: McpServer
+    - mcpServer:
+        toolNames:
+          - get_kubernetes_resources
+        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+      type: McpServer
+    - mcpServer:
+        toolNames:
+          - reconcile_flux_helmrelease
+        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+      type: McpServer
+    - mcpServer:
+        toolNames:
+          - reconcile_flux_kustomization
+        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+      type: McpServer
+    - mcpServer:
+        toolNames:
+          - reconcile_flux_resourceset
+        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+      type: McpServer
+    - mcpServer:
+        toolNames:
+          - reconcile_flux_source
+        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+      type: McpServer
+    - mcpServer:
+        toolNames:
+          - resume_flux_reconciliation
+        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+      type: McpServer
+    - mcpServer:
+        toolNames:
+          - search_flux_docs
+        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+      type: McpServer
+    - mcpServer:
+        toolNames:
+          - suspend_flux_reconciliation
+        toolServer: flux-operator-mcp.flux-system.svc.cluster.local
+      type: McpServer
+  a2aConfig:
+    skills:
+    - id: apply-manifest
+      name: Apply Kubernetes Manifest
+      description: Apply a Kubernetes manifest to the cluster
+      inputModes:
+      - text
+      outputModes:
+      - text
+      tags:
+      - k8s
+      - apply
+      examples:
+      - "Apply this deployment manifest"
+      - "Create this service"
+    - id: delete-resource
+      name: Delete Kubernetes Resource
+      description: Delete a Kubernetes resource from the cluster
+      inputModes:
+      - text
+      outputModes:
+      - text
+      tags:
+      - k8s
+      - delete
+      examples:
+      - "Delete the pod named my-pod in the default namespace"
+      - "Remove the service 'my-service'"
+    - id: get-flux-instance
+      name: Get Flux Instance Status
+      description: Get the status and configuration of the Flux installation
+      inputModes:
+      - text
+      outputModes:
+      - text
+      tags:
+      - flux
+      - status
+      examples:
+      - "What is the status of the Flux installation?"
+      - "Show me the Flux instance details"
+    - id: get-api-versions
+      name: Get Kubernetes API Versions
+      description: List available Kubernetes API versions
+      inputModes:
+      - text
+      outputModes:
+      - text
+      tags:
+      - k8s
+      - api
+      examples:
+      - "What are the available Kubernetes API versions?"
+      - "List API versions"
+    - id: get-logs
+      name: Get Kubernetes Logs
+      description: Retrieve logs for a Kubernetes pod
+      inputModes:
+      - text
+      outputModes:
+      - text
+      tags:
+      - k8s
+      - logs
+      - troubleshooting
+      examples:
+      - "Get logs for pod 'my-pod' in namespace 'default'"
+      - "Show logs for the controller pod"
+    - id: get-metrics
+      name: Get Kubernetes Metrics
+      description: Retrieve metrics for Kubernetes resources
+      inputModes:
+      - text
+      outputModes:
+      - text
+      tags:
+      - k8s
+      - metrics
+      examples:
+      - "Get metrics for all pods"
+      - "Show CPU usage for deployment 'my-app'"
+    - id: get-kubernetes-resources
+      name: Get Kubernetes Resources
+      description: Get resources in the Kubernetes cluster
+      inputModes:
+      - text
+      outputModes:
+      - text
+      tags:
+      - k8s
+      examples:
+      - "Get all resources in the Kubernetes cluster"
+      - "Get the pods in the default namespace"
+      - "Get the services in the istio-system namespace"
+      - "Get the deployments in the istio-system namespace"
+      - "Get the jobs in the istio-system namespace"
+      - "Get the cronjobs in the istio-system namespace"
+      - "Get the statefulsets in the istio-system namespace"
+    - id: reconcile-helmrelease
+      name: Reconcile Flux HelmRelease
+      description: Trigger reconciliation for a Flux HelmRelease
+      inputModes:
+      - text
+      outputModes:
+      - text
+      tags:
+      - flux
+      - helm
+      - reconcile
+      examples:
+      - "Reconcile HelmRelease 'my-release' in namespace 'default'"
+      - "Trigger reconciliation for the chart"
+    - id: reconcile-kustomization
+      name: Reconcile Flux Kustomization
+      description: Trigger reconciliation for a Flux Kustomization
+      inputModes:
+      - text
+      outputModes:
+      - text
+      tags:
+      - flux
+      - kustomize
+      - reconcile
+      examples:
+      - "Reconcile Kustomization 'my-kustomization' in namespace 'default'"
+      - "Trigger reconciliation for the kustomization"
+    - id: reconcile-resourceset
+      name: Reconcile Flux ResourceSet
+      description: Trigger reconciliation for a Flux ResourceSet
+      inputModes:
+      - text
+      outputModes:
+      - text
+      tags:
+      - flux
+      - resourceset
+      - reconcile
+      examples:
+      - "Reconcile ResourceSet 'my-resourceset' in namespace 'default'"
+      - "Trigger reconciliation for the resourceset"
+    - id: reconcile-source
+      name: Reconcile Flux Source
+      description: Trigger reconciliation for a Flux Source (GitRepository, HelmRepository, etc.)
+      inputModes:
+      - text
+      outputModes:
+      - text
+      tags:
+      - flux
+      - source
+      - reconcile
+      examples:
+      - "Reconcile GitRepository 'my-repo' in namespace 'default'"
+      - "Trigger reconciliation for the source"
+    - id: resume-reconciliation
+      name: Resume Flux Reconciliation
+      description: Resume reconciliation for a suspended Flux resource
+      inputModes:
+      - text
+      outputModes:
+      - text
+      tags:
+      - flux
+      - reconcile
+      - suspend
+      - resume
+      examples:
+      - "Resume reconciliation for HelmRelease 'my-release'"
+      - "Unsuspend the kustomization 'my-kustomization'"
+    - id: search-flux-docs
+      name: Search Flux Documentation
+      description: Search the official Flux documentation
+      inputModes:
+      - text
+      outputModes:
+      - text
+      tags:
+      - flux
+      - docs
+      - help
+      examples:
+      - "Search Flux docs for HelmRelease"
+      - "Tell me about GitRepository CRD"
+    - id: suspend-reconciliation
+      name: Suspend Flux Reconciliation
+      description: Suspend reconciliation for a Flux resource
+      inputModes:
+      - text
+      outputModes:
+      - text
+      tags:
+      - flux
+      - reconcile
+      - suspend
+      examples:
+      - "Suspend reconciliation for Kustomization 'my-kustomization'"
+      - "Pause the HelmRelease 'my-release'"

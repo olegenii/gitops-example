@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mcp-config
+  namespace: kagent
+data:
+  HOST: 0.0.0.0
+  PORT: '8051'
+  SUPABASE_URL: https://ggdtuxyfesambfcmthsl.supabase.co

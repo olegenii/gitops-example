@@ -1,0 +1,20 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: es-crawl4ai-rag
+  namespace: kagent
+spec:
+  dataFrom:
+    - extract:
+        conversionStrategy: Default
+        decodingStrategy: None
+        key: crawl4ai-rag
+        metadataPolicy: None
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: kv-olegen
+  target:
+    creationPolicy: Owner
+    deletionPolicy: Retain
+    name: mcp-secrets
