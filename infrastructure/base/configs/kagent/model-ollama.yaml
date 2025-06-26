@@ -1,0 +1,11 @@
+ apiVersion: kagent.dev/v1alpha1
+ kind: ModelConfig
+ metadata:
+   name: ollama-deepseek-r1-7b
+   namespace: kagent
+ spec:
+   apiKeySecretKey: ""
+   apiKeySecretRef: ""
+   model: deepseek-r1:7b
+   ollama: {}
+   provider: Ollama
