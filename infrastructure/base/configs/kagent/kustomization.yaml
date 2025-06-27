@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - es-azure-openai.yaml
   - model-4o-mini.yaml
+  - model-41.yaml
   - model-o4-mini.yaml
   - tools-context7.yaml
   - agent.yaml
