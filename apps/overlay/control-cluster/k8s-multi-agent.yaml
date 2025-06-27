@@ -5,7 +5,7 @@ metadata:
   namespace: kagent
 spec:
   description: An agent that knows how to use Kubernetes tools and calls other agents.
-  modelConfig: kagent/azure-openai-gpt-o4-mini
+  modelConfig: kagent/default-model-config
   systemMessage: |-
       You are an expert Kubernetes agent that uses tools and flux-mcp-agent to help users.
   tools:

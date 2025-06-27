@@ -5,7 +5,7 @@ metadata:
   namespace: kagent
 spec:
   description: Agent build on top of context7 mcp server for gathering latest documentation
-  modelConfig: kagent/azure-openai-gpt-o4-mini
+  modelConfig: kagent/default-model-config
   systemMessage: >-
     You are an AI assistant specialized in gathering documentation using the
     context7 MCP server tools.
