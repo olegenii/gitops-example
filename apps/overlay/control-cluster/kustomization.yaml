@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../base/flux-ui
-  - a2a-agent.yaml
+  - k8s-multi-agent.yaml
   - context7-agent.yaml
   - ./mcp/crawl4ai-rag
   - ./mcp/flux-mcp-server
