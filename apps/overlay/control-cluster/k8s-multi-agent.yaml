@@ -9,12 +9,12 @@ spec:
   systemMessage: |-
       You are an expert Kubernetes agent that uses tools and flux-mcp-agent to help users.
   tools:
-    - builtin:
-        name: kagent.tools.k8s.GetResources
-      type: Builtin
-    # - agent:
-    #     ref: flux-mcp-agent
-    #   type: Agent
+    - agent:
+        ref: kagent/flux-mcp-agent
+      type: Agent
+    - agent:
+        ref: kagent/context7-agent
+      type: Agent      
   a2aConfig:
     skills:
     - id: get-resources-skill
