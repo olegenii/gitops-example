@@ -1,21 +1,6 @@
-istio-agent:
-  enabled: true
-# providers:
-#   default: azureOpenAI
-  # azureOpenAI:
-  #   # apiKey: ""
-  #   apiKeySecretKey: AZUREOPENAI_API_KEY
-  #   apiKeySecretRef: kagent-azure-openai
-  #   config:
-  #     apiVersion: "2024-12-01-preview"
-  #     # azureAdToken: ""
-  #     azureDeployment: "gpt-4o-mini"
-  #     azureEndpoint: "https://olegen.openai.azure.com/"
-  #   model: gpt-4o-mini
-  #   # config:
-  #   #   apiVersion: "2024-12-01-preview"
-  #   #   # azureAdToken: ""
-  #   #   azureDeployment: "o4-mini"
-  #   #   azureEndpoint: "https://olegen.openai.azure.com/"
-  #   # model: o4-mini
-  #   provider: AzureOpenAI
+otel:
+  tracing:
+    enabled: true
+    exporter:
+      otlp:
+        endpoint: http://jaeger-collector.jaeger.svc.cluster.local:4317
