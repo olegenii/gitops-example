@@ -1,6 +1,284 @@
+agents:
+  argo-rollouts-agent:
+    enabled: false
+  cilium-debug-agent:
+    enabled: false
+  cilium-manager-agent:
+    enabled: false
+  cilium-policy-agent:
+    enabled: false
+  helm-agent:
+    enabled: true
+  istio-agent:
+    enabled: false
+  k8s-agent:
+    enabled: true
+  kgateway-agent:
+    enabled: false
+  observability-agent:
+    enabled: false
+  promql-agent:
+    enabled: false
+argo-rollouts-agent:
+  global: {}
+  modelConfigRef: ""
+cilium-debug-agent:
+  global: {}
+  modelConfigRef: ""
+cilium-manager-agent:
+  global: {}
+  modelConfigRef: ""
+cilium-policy-agent:
+  global: {}
+  modelConfigRef: ""
+controller:
+  agentImage:
+    pullPolicy: ""
+    registry: ""
+    repository: kagent-dev/kagent/app
+    tag: ""
+  env: {}
+  image:
+    pullPolicy: ""
+    registry: ""
+    repository: kagent-dev/kagent/controller
+    tag: ""
+  loglevel: info
+  nodeSelector: {}
+  replicas: 1
+  resources:
+    limits:
+      cpu: 2
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  service:
+    ports:
+      port: 8083
+      targetPort: 8083
+    type: ClusterIP
+  streaming:
+    initialBufSize: 4Ki
+    maxBufSize: 1Mi
+    timeout: 60s
+  tolerations: []
+  watchNamespaces: []
+database:
+  postgres:
+    url: postgres://postgres:kagent@pgsql-postgresql.kagent.svc.cluster.local:5432/postgres
+  sqlite:
+    databaseName: kagent.db
+  type: sqlite
+fullnameOverride: ""
+grafana-mcp:
+  config: null
+  fullnameOverride: ""
+  global: {}
+  grafana:
+    apiKey: '-'
+    url: grafana.kagent:3000/api
+  image:
+    pullPolicy: Always
+    registry: mcp
+    repository: grafana
+    tag: latest
+  nameOverride: ""
+  nodeSelector: {}
+  replicas: 1
+  resources: {}
+  securityContext: {}
+  service:
+    port: 8000
+    type: ClusterIP
+  serviceAccount:
+    annotations: {}
+    create: true
+    name: ""
+  tolerations: []
+helm-agent:
+  global: {}
+  modelConfigRef: ""
+imagePullPolicy: IfNotPresent
+imagePullSecrets: []
+istio-agent:
+  global: {}
+  modelConfigRef: ""
+k8s-agent:
+  global: {}
+  modelConfigRef: ""
+kagent-tools:
+  enabled: true
+  fullnameOverride: kagent-tools
+  global:
+    tag: ""
+  imagePullSecrets: []
+  nameOverride: ""
+  otel:
+    tracing:
+      enabled: false
+      exporter:
+        otlp:
+          endpoint: http://host.docker.internal:4317
+          insecure: true
+          timeout: 15
+  podAnnotations: {}
+  podSecurityContext: {}
+  replicaCount: 1
+  securityContext: {}
+  service:
+    ports:
+      tools:
+        nodePort: null
+        port: 8084
+        targetPort: 8084
+    type: ClusterIP
+  tools:
+    grafana:
+      apiKey: ""
+      url: http://grafana.kagent.svc.cluster.local:3000
+    image:
+      pullPolicy: IfNotPresent
+      registry: ghcr.io
+      repository: kagent-dev/kagent/tools
+      tag: ""
+    loglevel: debug
+    prometheus:
+      password: ""
+      url: prometheus.kagent.svc.cluster.local:9090
+      username: ""
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+kgateway-agent:
+  global: {}
+  modelConfigRef: ""
+labels: {}
+nameOverride: ""
+namespaceOverride: ""
+nodeSelector: {}
+observability-agent:
+  global: {}
+  modelConfigRef: ""
 otel:
+  logging:
+    enabled: false
+    exporter:
+      otlp:
+        endpoint: http://host.docker.internal:4317
+        insecure: true
+        timeout: 15
   tracing:
     enabled: true
     exporter:
       otlp:
         endpoint: http://jaeger-collector.jaeger.svc.cluster.local:4317
+        insecure: true
+        timeout: 15
+podAnnotations: {}
+podSecurityContext: {}
+promql-agent:
+  global: {}
+  modelConfigRef: ""
+providers:
+  anthropic:
+    apiKeySecretKey: ANTHROPIC_API_KEY
+    apiKeySecretRef: kagent-anthropic
+    model: claude-3-sonnet-20240229
+    provider: Anthropic
+  azureOpenAI:
+    apiKeySecretKey: AZUREOPENAI_API_KEY
+    apiKeySecretRef: kagent-azure-openai
+    config:
+      apiVersion: "2023-05-15"
+      azureAdToken: ""
+      azureDeployment: ""
+      azureEndpoint: ""
+    model: gpt-4.1-mini
+    provider: AzureOpenAI
+  default: openAI
+  ollama:
+    config:
+      host: host.docker.internal:11434
+    model: llama3.2
+    provider: Ollama
+  openAI:
+    apiKeySecretKey: OPENAI_API_KEY
+    apiKeySecretRef: kagent-openai
+    model: gpt-4.1-mini
+    provider: OpenAI
+querydoc:
+  config: null
+  fullnameOverride: ""
+  global: {}
+  image:
+    pullPolicy: IfNotPresent
+    registry: ghcr.io
+    repository: kagent-dev/doc2vec/mcp
+    tag: 1.1.12
+  logLevel: info
+  nameOverride: ""
+  nodeSelector: {}
+  openai:
+    apiKey: ""
+  otel:
+    tracing:
+      enabled: false
+      exporter:
+        otlp:
+          endpoint: ""
+          insecure: true
+          timeout: 10000
+  replicaCount: 1
+  replicas: 1
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  securityContext: {}
+  service:
+    port: 8080
+    type: ClusterIP
+  serviceAccount:
+    annotations: {}
+    create: true
+    name: ""
+  tolerations: []
+registry: cr.kagent.dev
+securityContext: {}
+tag: ""
+tolerations: []
+tools:
+  grafana-mcp:
+    enabled: true
+  querydoc:
+    enabled: true
+ui:
+  env: {}
+  image:
+    pullPolicy: ""
+    registry: ""
+    repository: kagent-dev/kagent/ui
+    tag: ""
+  nodeSelector: {}
+  replicas: 1
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+  service:
+    ports:
+      port: 80
+      targetPort: 8080
+    type: ClusterIP
+  tolerations: []
