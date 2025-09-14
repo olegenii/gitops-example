@@ -196,7 +196,7 @@ providers:
     config:
       apiVersion: "2024-12-01-preview"
       azureAdToken: ""
-      azureDeployment: "04-mini"
+      azureDeployment: "o4-mini"
       azureEndpoint: "https://olegen.openai.azure.com/"
     model: o4-mini
     provider: AzureOpenAI
