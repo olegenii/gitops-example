@@ -191,7 +191,7 @@ providers:
     model: claude-3-sonnet-20240229
     provider: Anthropic
   azureOpenAI:
-    apiKeySecret: kagent-azure-openai
+    apiKeySecretRef: kagent-azure-openai
     apiKeySecretKey: o4_mini
     config:
       apiVersion: "2024-12-01-preview"
