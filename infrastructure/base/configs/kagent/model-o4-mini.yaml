@@ -1,11 +1,11 @@
-apiVersion: kagent.dev/v1alpha1
+apiVersion: kagent.dev/v1alpha2
 kind: ModelConfig
 metadata:
   name: azure-openai-gpt-o4-mini
   namespace: kagent
 spec:
   apiKeySecretKey: o4_mini
-  apiKeySecretRef: kagent-azure-openai
+  apiKeySecret: kagent-azure-openai
   azureOpenAI:
     apiVersion: 2024-12-01-preview
     azureDeployment: o4-mini

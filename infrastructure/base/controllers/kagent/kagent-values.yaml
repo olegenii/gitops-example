@@ -194,13 +194,13 @@ providers:
     apiKeySecretKey: AZUREOPENAI_API_KEY
     apiKeySecretRef: kagent-azure-openai
     config:
-      apiVersion: "2023-05-15"
+      apiVersion: "2024-12-01-preview"
       azureAdToken: ""
-      azureDeployment: ""
-      azureEndpoint: ""
-    model: gpt-4.1-mini
+      azureDeployment: "04-mini"
+      azureEndpoint: "https://olegen.openai.azure.com/"
+    model: o4-mini
     provider: AzureOpenAI
-  default: openAI
+  default: azureOpenAI
   ollama:
     config:
       host: host.docker.internal:11434
