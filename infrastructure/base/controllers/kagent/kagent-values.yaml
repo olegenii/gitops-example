@@ -192,7 +192,7 @@ providers:
     provider: Anthropic
   azureOpenAI:
     apiKeySecretKey: AZUREOPENAI_API_KEY
-    apiKeySecretRef: o4-mini
+    apiKeySecretRef: o4_mini
     config:
       apiVersion: "2024-12-01-preview"
       azureAdToken: ""
