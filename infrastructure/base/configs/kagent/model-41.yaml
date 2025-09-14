@@ -5,7 +5,7 @@ metadata:
   namespace: kagent
 spec:
   apiKeySecretKey: "4_1"
-  apiKeySecretRef: kagent-azure-openai
+  apiKeySecret: kagent-azure-openai
   azureOpenAI:
     apiVersion: 2024-12-01-preview
     azureDeployment: gpt-4.1
