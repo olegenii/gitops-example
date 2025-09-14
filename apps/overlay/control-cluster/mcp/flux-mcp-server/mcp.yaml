@@ -61,14 +61,25 @@ spec:
             ports:
               - protocol: TCP
                 port: 9090
-    - kind: ToolServer
-      apiVersion: kagent.dev/v1alpha1
+    # - kind: ToolServer
+    #   apiVersion: kagent.dev/v1alpha1
+    #   metadata:
+    #     name: flux-operator-mcp
+    #     namespace: kagent
+    #   spec:
+    #     config:
+    #       sse:
+    #         timeout: 5s
+    #         url: http://flux-operator-mcp.flux-system:9090/sse
+    #     description: ''
+    - kind: RemoteMCPServer
+      apiVersion: kagent.dev/v1alpha2
       metadata:
         name: flux-operator-mcp
         namespace: kagent
       spec:
-        config:
-          sse:
-            timeout: 5s
-            url: http://flux-operator-mcp.flux-system:9090/sse
-        description: ''      
+        protocol: SSE
+        sseReadTimeout: 5m0s
+        timeout: 5s
+        url: http://flux-operator-mcp.flux-system:9090/sse
+        description: 'Flux MCP Server'
