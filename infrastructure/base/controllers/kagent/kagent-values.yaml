@@ -200,7 +200,7 @@ providers:
       azureEndpoint: "https://olegen.openai.azure.com/"
     model: o4-mini
     provider: AzureOpenAI
-  default: azureOpenAI
+  default: OpenAI
   ollama:
     config:
       host: host.docker.internal:11434
