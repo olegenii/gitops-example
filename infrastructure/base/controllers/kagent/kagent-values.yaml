@@ -196,9 +196,9 @@ providers:
     config:
       apiVersion: "2025-01-01-preview"
       azureAdToken: ""
-      azureDeployment: "o4-mini"
+      azureDeployment: "gpt-5-mini"
       azureEndpoint: "https://olegen.openai.azure.com/"
-    model: o4-mini
+    model: gpt-5-mini
     provider: AzureOpenAI
   default: azureOpenAI
   ollama:
