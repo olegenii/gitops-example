@@ -7,7 +7,7 @@ spec:
   apiKeySecretKey: o4_mini
   apiKeySecret: kagent-azure-openai
   azureOpenAI:
-    apiVersion: 2024-12-01-preview
+    apiVersion: 2025-01-01-preview
     azureDeployment: o4-mini
     azureEndpoint: https://olegen.openai.azure.com/
   model: o4-mini

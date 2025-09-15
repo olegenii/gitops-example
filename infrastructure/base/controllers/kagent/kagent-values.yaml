@@ -192,9 +192,9 @@ providers:
     provider: Anthropic
   azureOpenAI:
     apiKeySecretRef: kagent-azure-openai
-    apiKeySecretKey: o4_mini
+    apiKeySecretKey: AZURE_OPENAI_API_KEY
     config:
-      apiVersion: "2024-12-01-preview"
+      apiVersion: "2025-01-01-preview"
       azureAdToken: ""
       azureDeployment: "o4-mini"
       azureEndpoint: "https://olegen.openai.azure.com/"
