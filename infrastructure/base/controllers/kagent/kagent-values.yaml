@@ -212,7 +212,11 @@ providers:
     model: gpt-4.1-mini
     provider: OpenAI
 querydoc:
-  config: null
+  config:
+    AZURE_OPENAI_API_VERSION: '2023-05-15'
+    AZURE_OPENAI_DEPLOYMENT_NAME: 'text-embedding-3-large'
+    AZURE_OPENAI_ENDPOINT: 'https://olegen.openai.azure.com'
+    EMBEDDING_PROVIDER: azure
   fullnameOverride: ""
   global: {}
   image:
@@ -224,7 +228,7 @@ querydoc:
   nameOverride: ""
   nodeSelector: {}
   openai:
-    apiKey: ""
+    apiKey: "dummy"
   otel:
     tracing:
       enabled: false
