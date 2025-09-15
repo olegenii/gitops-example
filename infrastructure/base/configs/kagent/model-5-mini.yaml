@@ -1,0 +1,14 @@
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: azure-openai-gpt-5-mini
+  namespace: kagent
+spec:
+  apiKeySecretKey: AZURE_OPENAI_API_KEY
+  apiKeySecret: kagent-azure-openai
+  azureOpenAI:
+    apiVersion: 2025-01-01-preview
+    azureDeployment: gpt-5-mini
+    azureEndpoint: https://olegen.openai.azure.com/
+  model: gpt-5-mini
+  provider: AzureOpenAI
