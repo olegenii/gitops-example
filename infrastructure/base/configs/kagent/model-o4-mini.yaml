@@ -4,7 +4,7 @@ metadata:
   name: azure-openai-gpt-o4-mini
   namespace: kagent
 spec:
-  apiKeySecretKey: o4_mini
+  apiKeySecretKey: AZURE_OPENAI_API_KEY
   apiKeySecret: kagent-azure-openai
   azureOpenAI:
     apiVersion: 2025-01-01-preview
