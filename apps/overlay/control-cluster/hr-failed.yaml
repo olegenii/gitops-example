@@ -5,6 +5,8 @@ kind: HelmRepository
 metadata:
   name: komodorio
   namespace: test
+  annotations:
+    kagentFix: "2025-09-16T21:55:53Z"
 spec:
   interval: 1h0m0s
   url: https://helm-charts.komodor.io
@@ -14,6 +16,8 @@ kind: HelmRelease
 metadata:
   name: komoplane-15
   namespace: test
+  annotations:
+    kagentFix: "2025-09-16T21:55:53Z"
 spec:
   interval: 5m
   chart:
@@ -23,5 +27,5 @@ spec:
         kind: HelmRepository
         name: komodorio
   values:
-    replicaCount: 1oo
+    replicaCount: 1
 ---
