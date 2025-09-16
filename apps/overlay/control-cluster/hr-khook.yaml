@@ -1,0 +1,20 @@
+apiVersion: kagent.dev/v1alpha2
+kind: Hook
+metadata:
+  name: helm-release-monitoring-hook
+  namespace: test
+spec:
+  eventConfigurations:
+  - eventType: helm-release-failed
+    agentId: kagent/aire-agent
+    prompt: |
+      AUTONOMOUS MODE: A Flux HelmRelease {{.Namespace}}/{{.ResourceName}} has failed at {{.EventTime}}. Analyze the cause and implement fixes immediately.
+
+      INSTRUCTIONS:
+      • Use all available tools to diagnose and resolve the issue
+      • Annotate fixed resources with: kagentFix=<timestamp>
+      • If patching fails: delete and recreate resources
+      • Never ask for permission - assume autonomous execution
+      • Complete remediation without human approval
+      • Get git repository from GitRepository CR
+      • Provide a fix by openning a Pull Request to the repository with root cause analysis (RCA) and remediation steps

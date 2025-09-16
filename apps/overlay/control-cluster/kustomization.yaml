@@ -6,3 +6,4 @@ resources:
   # - context7-agent.yaml
   # - ./mcp/crawl4ai-rag
   - ./mcp/flux-mcp-server
+  - hr-failed.yaml

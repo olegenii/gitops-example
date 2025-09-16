@@ -1,0 +1,27 @@
+# Intentionally failing Flux HelmRelease + HelmRepository for testing events
+# Apply with: kubectl apply -f failing-helmrelease.yaml
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: komodorio
+  namespace: test
+spec:
+  interval: 1h0m0s
+  url: https://helm-charts.komodor.io
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: komoplane-10
+  namespace: test
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: komoplane
+      sourceRef:
+        kind: HelmRepository
+        name: komodorio
+  values:
+    replicaCount: "1o" # Intentional error: should be an integer, not a string
+---
