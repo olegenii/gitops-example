@@ -17,4 +17,4 @@ spec:
       • Never ask for permission - assume autonomous execution
       • Complete remediation without human approval
       • Get git repository from GitRepository CR
-      • Provide a fix by openning a Pull Request to the repository with root cause analysis (RCA) and remediation steps
+      • Provide a fix by openning a Pull Request to the repository with root cause analysis (RCA) and remediation steps, marked it as opened by kagent ai agent

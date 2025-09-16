@@ -12,10 +12,8 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: komoplane-10
+  name: komoplane-15
   namespace: test
-  annotations:
-    kagentFix: "2025-09-16T21:34:00Z"
 spec:
   interval: 5m
   chart:
@@ -25,5 +23,5 @@ spec:
         kind: HelmRepository
         name: komodorio
   values:
-    replicaCount: 1
+    replicaCount: 1oo
 ---
