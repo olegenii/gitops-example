@@ -1,0 +1,17 @@
+apiVersion: kpatch.kustomize.config.k8s.io/v1
+kind: Patch
+metadata:
+  name: komoplane-replicacount-fix
+patch: |
+  - op: replace
+    path: /spec/values/replicaCount
+    value: 1
+  - op: add
+    path: /metadata/annotations/kagentFix
+    value: "2025-09-17T01:14:33Z"
+target:
+  group: helm.toolkit.fluxcd.io
+  version: v2
+  kind: HelmRelease
+  name: komoplane-21
+  namespace: test
